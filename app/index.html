@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#060609">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>REPOS</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Anybody:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #060609;--panel: #0d0e14;--panel2: #13151e;--edge: rgba(255,255,255,0.05);
+    --red: #ff3355;--teal: #00ffd0;--teal-g: rgba(0,255,208,0.1);
+    --orange: #ff9f1c;--blue: #5b8def;--txt: #e8ecf4;--dim: #444b60;--green: #34d399;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'IBM Plex Mono',monospace;-webkit-user-select:none;user-select:none;overflow-x:hidden}
+  body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+
+  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--edge)}
+  .logo{font-family:'Anybody',sans-serif;font-weight:900;font-size:18px;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .top-right{display:flex;align-items:center;gap:10px}
+  .gear-btn{width:32px;height:32px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--dim);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .ble-pill{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:16px;border:1px solid var(--edge);background:var(--panel);font-size:11px;color:var(--dim);cursor:pointer}
+  .ble-pill.on{border-color:rgba(0,255,208,0.25);color:var(--teal)}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--dim);transition:.3s}
+  .dot.on{background:var(--teal);box-shadow:0 0 6px var(--teal-g)}
+
+  .status-line{font-size:9px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:6px;color:var(--dim)}
+  .status-line.active{color:var(--green)}
+  .status-line.pause{color:var(--orange)}
+  .status-line.done{color:var(--teal)}
+
+  .hero{display:flex;align-items:center;justify-content:center;gap:24px;padding:10px 16px 8px}
+  .big-count{text-align:center}
+  .big-num{font-family:'Anybody',sans-serif;font-weight:900;font-size:68px;line-height:1;transition:transform .1s,color .1s}
+  .big-num.pop{transform:scale(1.1);color:var(--red)}
+  .big-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-top:2px}
+  .goal-display{font-family:'Anybody';font-size:20px;font-weight:700;color:var(--dim);margin-top:-2px}
+  .goal-display span{color:var(--teal)}
+
+  .metric-col{text-align:center}
+  .metric-val{font-family:'Anybody',sans-serif;font-weight:700;font-size:28px;line-height:1}
+  .metric-val.teal{color:var(--teal)}
+  .metric-val.orange{color:var(--orange)}
+  .metric-unit{font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:2px}
+
+  .progress-wrap{padding:0 16px 6px}
+  .progress-bar{height:6px;border-radius:3px;background:var(--panel2);overflow:hidden}
+  .progress-fill{height:100%;border-radius:3px;background:var(--teal);width:0%;transition:width .2s}
+  .progress-fill.done{background:var(--green)}
+  .progress-info{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--dim);letter-spacing:1px}
+
+  .chart-box{flex:1;display:flex;flex-direction:column;padding:6px 12px;min-height:0}
+  .chart-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .chart-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+  .chart-live-dist{font-family:'Anybody';font-size:13px;font-weight:700;color:var(--teal)}
+  .chart-wrap{flex:1;position:relative;min-height:120px}
+  canvas{width:100%!important;height:100%!important;display:block}
+
+  .speed-section{padding:4px 12px 6px}
+  .speed-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .speed-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:1px;background:var(--edge);border-radius:10px;overflow:hidden}
+  .sg-header{background:var(--panel2);padding:6px 8px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:center}
+  .sg-header:first-child{text-align:left}
+  .sg-cell{background:var(--panel);padding:6px 8px;text-align:center;font-family:'Anybody';font-size:14px;font-weight:700}
+  .sg-cell:first-child{text-align:left;font-family:'IBM Plex Mono';font-size:10px;font-weight:400;color:var(--dim);display:flex;align-items:center;gap:4px}
+  .sg-cell.teal{color:var(--teal)}
+  .sg-cell.orange{color:var(--orange)}
+
+  .controls{display:flex;gap:8px;padding:8px 16px 20px;border-top:1px solid var(--edge)}
+  .cbtn{flex:1;padding:14px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+  .cbtn:active{transform:scale(.96)}
+  .cbtn.rst{border-color:rgba(255,51,85,0.2);color:var(--red)}
+  .cbtn.go{border-color:rgba(0,255,208,0.3);background:rgba(0,255,208,0.08);color:var(--teal);font-family:'Anybody';font-weight:900;font-size:14px;letter-spacing:1px}
+  .cbtn:disabled{opacity:.3;cursor:default}
+
+  .ov{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;transition:opacity .4s,visibility .4s}
+  .ov.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .ov-icon{font-size:56px;margin-bottom:20px}
+  .ov h1{font-family:'Anybody';font-weight:900;font-size:26px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .ov p{font-size:13px;color:var(--dim);line-height:1.7;max-width:280px;margin-bottom:28px}
+  .go-btn{padding:15px 44px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#000;font-family:'Anybody';font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+  .go-btn:active{transform:scale(.96)}
+  .go-btn:disabled{opacity:.4;cursor:wait}
+  .ov-sub{margin-top:14px;font-size:10px;color:var(--dim);opacity:.4}
+
+  .settings{position:fixed;inset:0;background:rgba(6,6,9,0.97);z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;transition:opacity .3s,visibility .3s}
+  .settings.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .settings h2{font-family:'Anybody';font-weight:900;font-size:20px;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;color:var(--teal)}
+  .setting-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:300px;padding:14px 0;border-bottom:1px solid var(--edge)}
+  .setting-label{font-size:12px;color:var(--dim);text-align:left}
+  .setting-label small{display:block;font-size:9px;opacity:.6;margin-top:2px}
+  .setting-input{display:flex;align-items:center;gap:10px}
+  .s-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
+  .s-btn:active{background:var(--panel2)}
+  .s-val{font-family:'Anybody';font-size:22px;font-weight:700;min-width:50px;text-align:center;color:var(--teal)}
+  .settings-save{margin-top:28px;padding:14px 40px;border:none;border-radius:12px;background:var(--teal);color:#000;font-family:'Anybody';font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+
+  .rest-overlay{position:fixed;inset:0;background:rgba(6,6,9,0.95);z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
+  .rest-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .rest-label{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+  .rest-time{font-family:'Anybody';font-weight:900;font-size:96px;line-height:1;color:var(--orange)}
+  .rest-sub{font-size:12px;color:var(--dim);margin-top:12px}
+  .rest-lidar{font-size:10px;color:var(--red);letter-spacing:1.5px;margin-top:8px}
+  .rest-skip{margin-top:28px;padding:12px 32px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer}
+
+  .goal-complete{position:fixed;inset:0;background:rgba(6,6,9,0.95);z-index:42;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
+  .goal-complete.hidden{opacity:0;visibility:hidden;pointer-events:none}
+  .goal-emoji{font-size:64px;margin-bottom:16px}
+  .goal-title{font-family:'Anybody';font-weight:900;font-size:28px;color:var(--green);letter-spacing:2px;margin-bottom:8px}
+  .goal-stats{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:24px}
+  .goal-stats b{color:var(--teal)}
+  .goal-dismiss{padding:14px 36px;border:none;border-radius:12px;background:var(--green);color:#000;font-family:'Anybody';font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="logo">REPOS</div>
+  <div class="top-right">
+    <div class="gear-btn" onclick="openSettings()">⚙</div>
+    <div class="ble-pill" id="blePill" onclick="showOverlay()">
+      <div class="dot" id="dot"></div>
+      <span id="bleLabel">Déconnecté</span>
+    </div>
+  </div>
+</div>
+
+<div class="status-line" id="statusLine">En attente</div>
+
+<div class="hero">
+  <div class="big-count">
+    <div class="big-num" id="count">0</div>
+    <div class="big-label">Reps</div>
+    <div class="goal-display" id="goalDisplay"></div>
+  </div>
+  <div class="metric-col">
+    <div class="metric-val teal" id="rpm">—</div>
+    <div class="metric-unit">Rep / min</div>
+  </div>
+  <div class="metric-col">
+    <div class="metric-val orange" id="seriesDisp">1</div>
+    <div class="metric-unit" id="seriesLabel">Série</div>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap" style="display:none">
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-info"><span id="progressLeft"></span><span id="progressRight"></span></div>
+</div>
+
+<div class="chart-box">
+  <div class="chart-bar">
+    <span class="chart-tag">Distance temps réel</span>
+    <span class="chart-live-dist" id="liveDist">— mm</span>
+  </div>
+  <div class="chart-wrap"><canvas id="cv"></canvas></div>
+</div>
+
+<div class="speed-section">
+  <div class="speed-title">Vitesse de mouvement (mm/s)</div>
+  <div class="speed-grid">
+    <div class="sg-header"></div><div class="sg-header">Min</div><div class="sg-header">Max</div><div class="sg-header">Moy</div>
+    <div class="sg-cell"><span style="color:var(--red)">▼</span> Desc.</div><div class="sg-cell teal" id="dMin">—</div><div class="sg-cell teal" id="dMax">—</div><div class="sg-cell teal" id="dAvg">—</div>
+    <div class="sg-cell"><span style="color:var(--teal)">▲</span> Mont.</div><div class="sg-cell orange" id="uMin">—</div><div class="sg-cell orange" id="uMax">—</div><div class="sg-cell orange" id="uAvg">—</div>
+  </div>
+</div>
+
+<div class="controls">
+  <button class="cbtn rst" onclick="fullReset()">Reset</button>
+  <button class="cbtn go" id="goBtn2" onclick="startSeries()">▶ Démarrer</button>
+</div>
+
+<div class="ov" id="ov">
+  <div class="ov-icon">📡</div>
+  <h1>REPOS</h1>
+  <p>Connecte ton boîtier REPOS en Bluetooth pour compter tes reps avec le capteur LiDAR.</p>
+  <button class="go-btn" id="goBtn" onclick="connectBLE()">Connecter</button>
+  <div class="ov-sub">VL53L1X — 50 mesures/sec</div>
+</div>
+
+<div class="settings hidden" id="settingsPanel">
+  <h2>Réglages</h2>
+  <div class="setting-row">
+    <div class="setting-label">Reps par série<small>0 = illimité</small></div>
+    <div class="setting-input"><div class="s-btn" onclick="adj('goal',-5)">−</div><div class="s-val" id="setGoal">20</div><div class="s-btn" onclick="adj('goal',5)">+</div></div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">Nombre de séries<small>0 = illimité</small></div>
+    <div class="setting-input"><div class="s-btn" onclick="adj('sets',-1)">−</div><div class="s-val" id="setSets">3</div><div class="s-btn" onclick="adj('sets',1)">+</div></div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-label">Pause entre séries<small>en secondes</small></div>
+    <div class="setting-input"><div class="s-btn" onclick="adj('rest',-5)">−</div><div class="s-val" id="setRest">60</div><div class="s-btn" onclick="adj('rest',5)">+</div></div>
+  </div>
+  <button class="settings-save" onclick="saveSettings()">OK</button>
+</div>
+
+<div class="rest-overlay hidden" id="restOverlay">
+  <div class="rest-label">Repos</div>
+  <div class="rest-time" id="restTime">60</div>
+  <div class="rest-sub" id="restSub"></div>
+  <div class="rest-lidar">Capteur en veille</div>
+  <button class="rest-skip" onclick="skipRest()">Passer</button>
+</div>
+
+<div class="goal-complete hidden" id="goalComplete">
+  <div class="goal-emoji">🏆</div>
+  <div class="goal-title">TERMINÉ !</div>
+  <div class="goal-stats" id="goalStats"></div>
+  <button class="goal-dismiss" onclick="dismissGoal()">OK</button>
+</div>
+
+<script>
+const SVC='4fafc201-1fb5-459e-8fcc-c5c9c331914b',CHC='beb5483e-36e1-4688-b7f5-ea07361b26a8',CHP='d1a7e8b2-4c5f-6a3d-9e2b-1f8c7d4a5b6e',CHW='1c95d5e3-d8f7-413a-bf3d-7a2e5d7be87e';
+let dev,srv,chCount,chProf,chCmd,bleOk=false;
+
+const SEUIL=70,MAXD=500,MAXPTS=600;
+let pts=[],lastCnt=0,firstRepTime=null;
+let phase='idle',prevD=null,prevT=null;
+let curDown=[],curUp=[],allDown=[],allUp=[];
+
+let CFG={goal:20,sets:3,rest:60};
+let curSeries=1,curCount=0,totalAll=0;
+let seriesDone=false,restTimerId=null,restRem=0;
+let appState='idle';
+
+let actx;
+function bip(f=700,d=40){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.25,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d/1000);o.start();o.stop(actx.currentTime+d/1000);}catch(e){}}
+function bipOk(){bip(523,80);setTimeout(()=>bip(659,80),100);setTimeout(()=>bip(784,120),200);}
+
+const $=id=>document.getElementById(id);
+async function sendRaw(c){if(!bleOk||!chCmd)return;try{await chCmd.writeValue(new TextEncoder().encode(c));}catch(e){console.error(e);}}
+
+function setStatus(t,c){const s=$('statusLine');s.textContent=t;s.className='status-line'+(c?' '+c:'');}
+
+// Settings
+function openSettings(){if(appState!=='idle')return;$('settingsPanel').classList.remove('hidden');updSetUI();}
+function updSetUI(){$('setGoal').textContent=CFG.goal||'∞';$('setSets').textContent=CFG.sets||'∞';$('setRest').textContent=CFG.rest;}
+function adj(k,d){if(k==='goal')CFG.goal=Math.max(0,CFG.goal+d);if(k==='sets')CFG.sets=Math.max(0,CFG.sets+d);if(k==='rest')CFG.rest=Math.max(5,CFG.rest+d);updSetUI();}
+function saveSettings(){$('settingsPanel').classList.add('hidden');updGoal();updProgress();}
+
+function updGoal(){
+  const g=$('goalDisplay');
+  if(CFG.goal>0){g.innerHTML='/ <span>'+CFG.goal+'</span>';$('progressWrap').style.display='block';$('seriesLabel').textContent=CFG.sets>0?'/ '+CFG.sets:'Série';}
+  else{g.innerHTML='';$('progressWrap').style.display='none';$('seriesLabel').textContent='Série';}
+}
+
+function updProgress(){
+  if(CFG.goal<=0)return;
+  const pct=Math.min(curCount/CFG.goal*100,100);
+  $('progressFill').style.width=pct+'%';$('progressFill').classList.toggle('done',pct>=100);
+  const rem=Math.max(0,CFG.goal-curCount);
+  $('progressLeft').textContent=rem>0?rem+' restantes':'Terminé !';
+  $('progressRight').textContent=curCount+'/'+CFG.goal;
+}
+
+// Start
+async function startSeries(){
+  if(!bleOk||appState==='running')return;
+  if(appState==='idle'||appState==='finished'){
+    await sendRaw('RESET');
+    curSeries=1;curCount=0;totalAll=0;firstRepTime=null;lastCnt=0;
+    pts=[];allDown=[];allUp=[];curDown=[];curUp=[];
+    phase='idle';prevD=null;prevT=null;seriesDone=false;
+    $('dMin').textContent=$('dMax').textContent=$('dAvg').textContent='—';
+    $('uMin').textContent=$('uMax').textContent=$('uAvg').textContent='—';
+    $('rpm').textContent='—';$('count').textContent='0';$('seriesDisp').textContent='1';
+    updProgress();
+  }
+  await sendRaw('START');
+  appState='running';seriesDone=false;
+  setStatus('Série '+curSeries+(CFG.sets>0?' / '+CFG.sets:'')+' — Capteur actif','active');
+  $('goBtn2').disabled=true;$('goBtn2').textContent='En cours...';
+}
+
+// Rest
+function startRest(){
+  appState='resting';sendRaw('PAUSE');
+  setStatus('Repos — Capteur en veille','pause');
+  restRem=CFG.rest;$('restOverlay').classList.remove('hidden');updRestDisp();
+  restTimerId=setInterval(()=>{
+    restRem--;
+    if(restRem<=0){clearInterval(restTimerId);restTimerId=null;endRest();}
+    updRestDisp();
+    if(restRem===3)bip(440,100);if(restRem===2)bip(550,100);if(restRem===1)bip(660,100);if(restRem===0)bip(880,200);
+  },1000);
+}
+
+function updRestDisp(){
+  const m=Math.floor(restRem/60),s=restRem%60;
+  $('restTime').textContent=(m>0?m+':':'')+String(s).padStart(m>0?2:1,'0');
+  $('restSub').textContent='Série '+(curSeries+1)+(CFG.sets>0?' / '+CFG.sets:'')+' dans...';
+}
+
+function skipRest(){if(restTimerId){clearInterval(restTimerId);restTimerId=null;}endRest();}
+
+async function endRest(){
+  $('restOverlay').classList.add('hidden');
+  curSeries++;curCount=0;seriesDone=false;
+  await sendRaw('SERIES');await sendRaw('START');
+  appState='running';
+  setStatus('Série '+curSeries+(CFG.sets>0?' / '+CFG.sets:'')+' — Capteur actif','active');
+  updProgress();
+}
+
+// Finish
+function finishAll(){
+  appState='finished';sendRaw('PAUSE');
+  setStatus('Terminé — Capteur éteint','done');
+  $('goBtn2').disabled=false;$('goBtn2').textContent='▶ Recommencer';
+  let elapsed='';
+  if(firstRepTime){const sec=Math.round((Date.now()-firstRepTime)/1000);elapsed=Math.floor(sec/60)+'min '+sec%60+'s';}
+  let html='<b>'+totalAll+'</b> reps au total<br><b>'+curSeries+'</b> série'+(curSeries>1?'s':'')+' complétée'+(curSeries>1?'s':'')+'<br>';
+  if(elapsed)html+='Durée: <b>'+elapsed+'</b><br>';
+  if(allDown.length>0)html+='Vitesse moy. descente: <b>'+Math.round(allDown.reduce((a,b)=>a+b,0)/allDown.length)+'</b> mm/s';
+  $('goalStats').innerHTML=html;$('goalComplete').classList.remove('hidden');bipOk();
+}
+function dismissGoal(){$('goalComplete').classList.add('hidden');}
+
+// Reset
+async function fullReset(){
+  if(restTimerId){clearInterval(restTimerId);restTimerId=null;}
+  $('restOverlay').classList.add('hidden');$('goalComplete').classList.add('hidden');
+  await sendRaw('RESET');await sendRaw('PAUSE');
+  appState='idle';curSeries=1;curCount=0;totalAll=0;firstRepTime=null;lastCnt=0;
+  pts=[];allDown=[];allUp=[];curDown=[];curUp=[];phase='idle';prevD=null;prevT=null;seriesDone=false;
+  $('count').textContent='0';$('seriesDisp').textContent='1';$('rpm').textContent='—';$('liveDist').textContent='— mm';
+  $('dMin').textContent=$('dMax').textContent=$('dAvg').textContent='—';
+  $('uMin').textContent=$('uMax').textContent=$('uAvg').textContent='—';
+  $('goBtn2').disabled=false;$('goBtn2').textContent='▶ Démarrer';
+  setStatus('En attente','');updProgress();bip(440,100);
+}
+
+// BLE
+async function connectBLE(){
+  const b=$('goBtn');b.textContent='RECHERCHE...';b.disabled=true;
+  try{
+    dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[SVC]});
+    dev.addEventListener('gattserverdisconnected',onDisco);
+    srv=await dev.gatt.connect();
+    const s=await srv.getPrimaryService(SVC);
+    chCount=await s.getCharacteristic(CHC);await chCount.startNotifications();chCount.addEventListener('characteristicvaluechanged',onCnt);
+    chProf=await s.getCharacteristic(CHP);await chProf.startNotifications();chProf.addEventListener('characteristicvaluechanged',onProf);
+    chCmd=await s.getCharacteristic(CHW);
+    bleOk=true;$('ov').classList.add('hidden');$('dot').classList.add('on');$('bleLabel').textContent='Connecté';$('blePill').classList.add('on');
+    resize();draw();updGoal();setStatus('Connecté — Prêt','');
+    try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}
+  }catch(e){console.error(e);b.textContent='CONNECTER';b.disabled=false;}
+}
+
+function onDisco(){
+  bleOk=false;appState='idle';
+  if(restTimerId){clearInterval(restTimerId);restTimerId=null;}
+  $('restOverlay').classList.add('hidden');
+  $('dot').classList.remove('on');$('bleLabel').textContent='Déconnecté';$('blePill').classList.remove('on');
+  $('ov').classList.remove('hidden');$('goBtn').textContent='RECONNECTER';$('goBtn').disabled=false;
+  setStatus('Déconnecté','');
+}
+function showOverlay(){if(!bleOk)$('ov').classList.remove('hidden');}
+
+// Count
+function onCnt(e){
+  const v=new TextDecoder().decode(e.target.value).split(',');
+  if(v.length<3)return;
+  const c=+v[0],tot=+v[1],ser=+v[2];
+  if(c>lastCnt||(c===1&&lastCnt>1))onRep(c);
+  lastCnt=c;curCount=c;totalAll=tot;
+  $('count').textContent=c;$('seriesDisp').textContent=curSeries;
+  if(firstRepTime&&tot>0){const m=(Date.now()-firstRepTime)/60000;$('rpm').textContent=m>.05?Math.round(tot/m):'—';}
+  updProgress();
+}
+
+function onRep(c){
+  if(!firstRepTime)firstRepTime=Date.now();
+  bip(700,45);if(navigator.vibrate)navigator.vibrate(25);
+  $('count').classList.add('pop');setTimeout(()=>$('count').classList.remove('pop'),150);
+  if(curDown.length>0)allDown.push(...curDown);
+  if(curUp.length>0)allUp.push(...curUp);
+  curDown=[];curUp=[];phase='idle';prevD=null;prevT=null;
+  updSpeed();
+  if(CFG.goal>0&&c>=CFG.goal&&!seriesDone){
+    seriesDone=true;bipOk();
+    if(CFG.sets>0&&curSeries>=CFG.sets)setTimeout(()=>finishAll(),600);
+    else setTimeout(()=>startRest(),800);
+  }
+}
+
+// Profile
+function onProf(e){
+  const v=new TextDecoder().decode(e.target.value);
+  v.split('|').forEach(s=>{
+    const p=s.split(',');if(p.length<2)return;
+    const t=+p[0],d=+p[1];
+    pts.push({t,d});if(pts.length>MAXPTS)pts.shift();
+    $('liveDist').textContent=d+' mm';
+    if(prevD!==null&&prevT!==null){const dt=(t-prevT)/1000;if(dt>0){const dd=d-prevD,sp=Math.abs(dd/dt);if(sp>5){if(dd<0){if(phase==='ascending'||phase==='idle')phase='descending';curDown.push(sp);}else{if(phase==='descending'||phase==='idle')phase='ascending';curUp.push(sp);}}}}
+    prevD=d;prevT=t;
+  });
+}
+
+function updSpeed(){
+  if(allDown.length>0){$('dMin').textContent=Math.round(Math.min(...allDown));$('dMax').textContent=Math.round(Math.max(...allDown));$('dAvg').textContent=Math.round(allDown.reduce((a,b)=>a+b,0)/allDown.length);}
+  if(allUp.length>0){$('uMin').textContent=Math.round(Math.min(...allUp));$('uMax').textContent=Math.round(Math.max(...allUp));$('uAvg').textContent=Math.round(allUp.reduce((a,b)=>a+b,0)/allUp.length);}
+}
+
+// Canvas
+const cv=$('cv'),ctx2=cv.getContext('2d');
+function resize(){const r=cv.parentElement.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;ctx2.scale(devicePixelRatio,devicePixelRatio);}
+window.addEventListener('resize',resize);setTimeout(resize,120);
+
+function draw(){
+  const W=cv.width/devicePixelRatio,H=cv.height/devicePixelRatio;
+  ctx2.clearRect(0,0,W,H);
+  const P={t:8,r:8,b:20,l:34},cW=W-P.l-P.r,cH=H-P.t-P.b;
+  ctx2.strokeStyle='rgba(255,255,255,0.035)';ctx2.lineWidth=1;ctx2.fillStyle='rgba(255,255,255,0.18)';ctx2.font='9px IBM Plex Mono';ctx2.textAlign='right';
+  for(let i=0;i<=5;i++){const y=P.t+(cH/5)*i;ctx2.beginPath();ctx2.moveTo(P.l,y);ctx2.lineTo(W-P.r,y);ctx2.stroke();ctx2.fillText(Math.round(MAXD-(MAXD/5)*i),P.l-5,y+3);}
+  const sY=P.t+cH*(1-SEUIL/MAXD);ctx2.save();ctx2.strokeStyle='rgba(255,51,85,0.35)';ctx2.setLineDash([3,3]);ctx2.beginPath();ctx2.moveTo(P.l,sY);ctx2.lineTo(W-P.r,sY);ctx2.stroke();ctx2.restore();
+  ctx2.fillStyle='rgba(255,51,85,0.5)';ctx2.font='8px IBM Plex Mono';ctx2.textAlign='left';ctx2.fillText('SEUIL 70mm',P.l+4,sY-4);
+  if(pts.length<2){ctx2.fillStyle='rgba(255,255,255,0.1)';ctx2.font='12px IBM Plex Mono';ctx2.textAlign='center';ctx2.fillText(appState==='running'?'En attente de donnees...':'Capteur en veille',W/2,H/2);requestAnimationFrame(draw);return;}
+  const t0c=pts[0].t,t1c=pts[pts.length-1].t,tR=Math.max(t1c-t0c,1);
+  for(let i=1;i<pts.length;i++){const x0=P.l+((pts[i-1].t-t0c)/tR)*cW,y0=P.t+cH*(1-pts[i-1].d/MAXD),x1=P.l+((pts[i].t-t0c)/tR)*cW,y1=P.t+cH*(1-pts[i].d/MAXD);ctx2.strokeStyle=pts[i].d<SEUIL?'rgba(255,51,85,0.9)':'rgba(0,255,208,0.85)';ctx2.lineWidth=pts[i].d<SEUIL?2.5:1.5;ctx2.beginPath();ctx2.moveTo(x0,y0);ctx2.lineTo(x1,y1);ctx2.stroke();}
+  ctx2.beginPath();for(let i=0;i<pts.length;i++){const x=P.l+((pts[i].t-t0c)/tR)*cW,y=P.t+cH*(1-pts[i].d/MAXD);if(i===0)ctx2.moveTo(x,y);else ctx2.lineTo(x,y);}
+  ctx2.lineTo(P.l+cW,P.t+cH);ctx2.lineTo(P.l,P.t+cH);ctx2.closePath();const grd=ctx2.createLinearGradient(0,P.t,0,P.t+cH);grd.addColorStop(0,'rgba(0,255,208,0.06)');grd.addColorStop(1,'rgba(0,255,208,0)');ctx2.fillStyle=grd;ctx2.fill();
+  ctx2.fillStyle='rgba(255,255,255,0.15)';ctx2.font='9px IBM Plex Mono';ctx2.textAlign='left';ctx2.fillText('-'+(tR/1000).toFixed(0)+'s',P.l,H-3);ctx2.textAlign='right';ctx2.fillText('now',W-P.r,H-3);
+  requestAnimationFrame(draw);
+}
+
+document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}}});
+updGoal();
+</script>
+</body>
+</html>

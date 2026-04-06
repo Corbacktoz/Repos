@@ -1,0 +1,11 @@
+{
+  "name": "REPOS",
+  "short_name": "REPOS",
+  "description": "Rep Evaluation and Performance Open System",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#060609",
+  "theme_color": "#060609",
+  "orientation": "portrait",
+  "icons": []
+}
