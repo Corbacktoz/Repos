@@ -9,113 +9,165 @@
 <title>REPOS</title>
 <link rel="manifest" href="manifest.json">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Anybody:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anybody:wght@400;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap');
 
-  :root {
-    --bg: #060609;--panel: #0d0e14;--panel2: #13151e;--edge: rgba(255,255,255,0.05);
-    --red: #ff3355;--teal: #00ffd0;--teal-g: rgba(0,255,208,0.1);
-    --orange: #ff9f1c;--blue: #5b8def;--txt: #e8ecf4;--dim: #444b60;--green: #34d399;
-  }
+:root {
+  --bg:#060609;--panel:#0d0e14;--panel2:#13151e;--edge:rgba(255,255,255,0.05);
+  --red:#ff3355;--teal:#00ffd0;--teal-g:rgba(0,255,208,0.1);
+  --orange:#ff9f1c;--blue:#5b8def;--txt:#e8ecf4;--dim:#444b60;--green:#34d399;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'IBM Plex Mono',monospace;-webkit-user-select:none;user-select:none;overflow-x:hidden}
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'IBM Plex Mono',monospace;-webkit-user-select:none;user-select:none;overflow-x:hidden}
-  body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+.top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--edge)}
+.logo{font-family:'Anybody',sans-serif;font-weight:900;font-size:18px;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.top-right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:32px;height:32px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--dim);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s}
+.icon-btn:active{background:var(--panel2)}
+.ble-pill{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:16px;border:1px solid var(--edge);background:var(--panel);font-size:11px;color:var(--dim);cursor:pointer}
+.ble-pill.on{border-color:rgba(0,255,208,0.25);color:var(--teal)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--dim);transition:.3s}
+.dot.on{background:var(--teal);box-shadow:0 0 6px var(--teal-g)}
 
-  .top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--edge)}
-  .logo{font-family:'Anybody',sans-serif;font-weight:900;font-size:18px;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .top-right{display:flex;align-items:center;gap:10px}
-  .gear-btn{width:32px;height:32px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--dim);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .ble-pill{display:flex;align-items:center;gap:7px;padding:6px 14px;border-radius:16px;border:1px solid var(--edge);background:var(--panel);font-size:11px;color:var(--dim);cursor:pointer}
-  .ble-pill.on{border-color:rgba(0,255,208,0.25);color:var(--teal)}
-  .dot{width:6px;height:6px;border-radius:50%;background:var(--dim);transition:.3s}
-  .dot.on{background:var(--teal);box-shadow:0 0 6px var(--teal-g)}
+.status-line{font-size:9px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:6px;color:var(--dim)}
+.status-line.active{color:var(--green)}
+.status-line.pause{color:var(--orange)}
+.status-line.done{color:var(--teal)}
 
-  .status-line{font-size:9px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:6px;color:var(--dim)}
-  .status-line.active{color:var(--green)}
-  .status-line.pause{color:var(--orange)}
-  .status-line.done{color:var(--teal)}
+.hero{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 6px}
+.big-count{text-align:center;flex:1}
+.ex-name{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;margin:0 auto 4px}
+.big-num{font-family:'Anybody',sans-serif;font-weight:900;font-size:64px;line-height:1;transition:transform .1s,color .1s}
+.big-num.pop{transform:scale(1.1);color:var(--red)}
+.big-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-top:2px}
+.goal-display{font-family:'Anybody';font-size:18px;font-weight:700;color:var(--dim);margin-top:-2px}
+.goal-display span{color:var(--teal)}
+.metric-col{text-align:center}
+.metric-val{font-family:'Anybody',sans-serif;font-weight:700;font-size:26px;line-height:1}
+.metric-val.teal{color:var(--teal)}
+.metric-val.orange{color:var(--orange)}
+.metric-unit{font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:2px}
 
-  .hero{display:flex;align-items:center;justify-content:center;gap:24px;padding:10px 16px 8px}
-  .big-count{text-align:center}
-  .big-num{font-family:'Anybody',sans-serif;font-weight:900;font-size:68px;line-height:1;transition:transform .1s,color .1s}
-  .big-num.pop{transform:scale(1.1);color:var(--red)}
-  .big-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--dim);margin-top:2px}
-  .goal-display{font-family:'Anybody';font-size:20px;font-weight:700;color:var(--dim);margin-top:-2px}
-  .goal-display span{color:var(--teal)}
+.ex-dots{display:flex;gap:5px;justify-content:center;padding:4px 16px}
+.ex-dot{width:8px;height:8px;border-radius:50%;background:var(--dim);transition:.3s;flex-shrink:0}
+.ex-dot.done{background:var(--green)}
+.ex-dot.active{background:var(--teal);box-shadow:0 0 6px var(--teal-g)}
 
-  .metric-col{text-align:center}
-  .metric-val{font-family:'Anybody',sans-serif;font-weight:700;font-size:28px;line-height:1}
-  .metric-val.teal{color:var(--teal)}
-  .metric-val.orange{color:var(--orange)}
-  .metric-unit{font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:2px}
+.zone-section{padding:4px 16px 6px}
+.zone-label{display:flex;justify-content:space-between;font-size:9px;color:var(--dim);letter-spacing:1px;margin-bottom:4px}
+.zone-track{height:14px;background:var(--panel2);border-radius:7px;position:relative;overflow:hidden;border:1px solid var(--edge)}
+.zone-band{position:absolute;height:100%;background:rgba(0,255,208,0.15);border-left:2px solid rgba(0,255,208,0.5);border-right:2px solid rgba(0,255,208,0.5)}
+.zone-cursor{position:absolute;width:4px;height:100%;background:var(--teal);border-radius:2px;transform:translateX(-50%);transition:left .06s;box-shadow:0 0 6px var(--teal)}
+.zone-cursor.in-zone{background:var(--green);box-shadow:0 0 10px var(--green)}
 
-  .progress-wrap{padding:0 16px 6px}
-  .progress-bar{height:6px;border-radius:3px;background:var(--panel2);overflow:hidden}
-  .progress-fill{height:100%;border-radius:3px;background:var(--teal);width:0%;transition:width .2s}
-  .progress-fill.done{background:var(--green)}
-  .progress-info{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--dim);letter-spacing:1px}
+.progress-wrap{padding:0 16px 6px}
+.progress-bar{height:5px;border-radius:3px;background:var(--panel2);overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--teal);width:0%;transition:width .2s}
+.progress-fill.done{background:var(--green)}
+.progress-info{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;color:var(--dim);letter-spacing:1px}
 
-  .chart-box{flex:1;display:flex;flex-direction:column;padding:6px 12px;min-height:0}
-  .chart-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-  .chart-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
-  .chart-live-dist{font-family:'Anybody';font-size:13px;font-weight:700;color:var(--teal)}
-  .chart-wrap{flex:1;position:relative;min-height:120px}
-  canvas{width:100%!important;height:100%!important;display:block}
+.chart-box{flex:1;display:flex;flex-direction:column;padding:6px 12px;min-height:0}
+.chart-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.chart-tag{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.chart-live-dist{font-family:'Anybody';font-size:13px;font-weight:700;color:var(--teal)}
+.chart-wrap{flex:1;position:relative;min-height:90px}
+canvas{width:100%!important;height:100%!important;display:block}
 
-  .speed-section{padding:4px 12px 6px}
-  .speed-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
-  .speed-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:1px;background:var(--edge);border-radius:10px;overflow:hidden}
-  .sg-header{background:var(--panel2);padding:6px 8px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:center}
-  .sg-header:first-child{text-align:left}
-  .sg-cell{background:var(--panel);padding:6px 8px;text-align:center;font-family:'Anybody';font-size:14px;font-weight:700}
-  .sg-cell:first-child{text-align:left;font-family:'IBM Plex Mono';font-size:10px;font-weight:400;color:var(--dim);display:flex;align-items:center;gap:4px}
-  .sg-cell.teal{color:var(--teal)}
-  .sg-cell.orange{color:var(--orange)}
+.speed-section{padding:4px 12px 6px}
+.speed-title{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.speed-grid{display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:1px;background:var(--edge);border-radius:10px;overflow:hidden}
+.sg-header{background:var(--panel2);padding:6px 8px;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);text-align:center}
+.sg-header:first-child{text-align:left}
+.sg-cell{background:var(--panel);padding:6px 8px;text-align:center;font-family:'Anybody';font-size:14px;font-weight:700}
+.sg-cell:first-child{text-align:left;font-family:'IBM Plex Mono';font-size:10px;font-weight:400;color:var(--dim);display:flex;align-items:center;gap:4px}
+.sg-cell.teal{color:var(--teal)}
+.sg-cell.orange{color:var(--orange)}
 
-  .controls{display:flex;gap:8px;padding:8px 16px 20px;border-top:1px solid var(--edge)}
-  .cbtn{flex:1;padding:14px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
-  .cbtn:active{transform:scale(.96)}
-  .cbtn.rst{border-color:rgba(255,51,85,0.2);color:var(--red)}
-  .cbtn.go{border-color:rgba(0,255,208,0.3);background:rgba(0,255,208,0.08);color:var(--teal);font-family:'Anybody';font-weight:900;font-size:14px;letter-spacing:1px}
-  .cbtn:disabled{opacity:.3;cursor:default}
+.controls{display:flex;gap:8px;padding:8px 16px 20px;border-top:1px solid var(--edge)}
+.cbtn{flex:1;padding:14px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer;transition:.15s}
+.cbtn:active{transform:scale(.96)}
+.cbtn.rst{border-color:rgba(255,51,85,0.2);color:var(--red)}
+.cbtn.go{border-color:rgba(0,255,208,0.3);background:rgba(0,255,208,0.08);color:var(--teal);font-family:'Anybody';font-weight:900;font-size:14px;letter-spacing:1px}
+.cbtn:disabled{opacity:.3;cursor:default}
 
-  .ov{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;transition:opacity .4s,visibility .4s}
-  .ov.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .ov-icon{font-size:56px;margin-bottom:20px}
-  .ov h1{font-family:'Anybody';font-weight:900;font-size:26px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .ov p{font-size:13px;color:var(--dim);line-height:1.7;max-width:280px;margin-bottom:28px}
-  .go-btn{padding:15px 44px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#000;font-family:'Anybody';font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
-  .go-btn:active{transform:scale(.96)}
-  .go-btn:disabled{opacity:.4;cursor:wait}
-  .ov-sub{margin-top:14px;font-size:10px;color:var(--dim);opacity:.4}
+/* BLE overlay */
+.ov{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;transition:opacity .4s,visibility .4s}
+.ov.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ov-icon{font-size:56px;margin-bottom:20px}
+.ov h1{font-family:'Anybody';font-weight:900;font-size:26px;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px;background:linear-gradient(135deg,var(--teal),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ov p{font-size:13px;color:var(--dim);line-height:1.7;max-width:280px;margin-bottom:28px}
+.go-btn{padding:15px 44px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#000;font-family:'Anybody';font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.go-btn:active{transform:scale(.96)}
+.go-btn:disabled{opacity:.4;cursor:wait}
+.ov-sub{margin-top:14px;font-size:10px;color:var(--dim);opacity:.4}
 
-  .settings{position:fixed;inset:0;background:rgba(6,6,9,0.97);z-index:45;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;transition:opacity .3s,visibility .3s}
-  .settings.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .settings h2{font-family:'Anybody';font-weight:900;font-size:20px;letter-spacing:2px;text-transform:uppercase;margin-bottom:24px;color:var(--teal)}
-  .setting-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:300px;padding:14px 0;border-bottom:1px solid var(--edge)}
-  .setting-label{font-size:12px;color:var(--dim);text-align:left}
-  .setting-label small{display:block;font-size:9px;opacity:.6;margin-top:2px}
-  .setting-input{display:flex;align-items:center;gap:10px}
-  .s-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .s-btn:active{background:var(--panel2)}
-  .s-val{font-family:'Anybody';font-size:22px;font-weight:700;min-width:50px;text-align:center;color:var(--teal)}
-  .settings-save{margin-top:28px;padding:14px 40px;border:none;border-radius:12px;background:var(--teal);color:#000;font-family:'Anybody';font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+/* Program panel */
+.prog-panel{position:fixed;inset:0;background:var(--bg);z-index:45;display:flex;flex-direction:column;transition:opacity .3s,visibility .3s;overflow:hidden}
+.prog-panel.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.prog-header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid var(--edge);flex-shrink:0}
+.prog-title{font-family:'Anybody';font-weight:900;font-size:18px;letter-spacing:2px;text-transform:uppercase;color:var(--teal)}
+.prog-close{width:32px;height:32px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prog-body{flex:1;overflow-y:auto;padding:16px;-webkit-overflow-scrolling:touch}
+.prog-section{margin-bottom:24px}
+.prog-section-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+.prog-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--edge)}
+.prog-row-label{font-size:12px;color:var(--txt)}
+.prog-row-label small{display:block;font-size:9px;color:var(--dim);margin-top:2px}
+.s-input{display:flex;align-items:center;gap:10px}
+.s-btn{width:34px;height:34px;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.s-btn:active{background:var(--panel2)}
+.s-val{font-family:'Anybody';font-size:22px;font-weight:700;min-width:50px;text-align:center;color:var(--teal)}
 
-  .rest-overlay{position:fixed;inset:0;background:rgba(6,6,9,0.95);z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
-  .rest-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .rest-label{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
-  .rest-time{font-family:'Anybody';font-weight:900;font-size:96px;line-height:1;color:var(--orange)}
-  .rest-sub{font-size:12px;color:var(--dim);margin-top:12px}
-  .rest-lidar{font-size:10px;color:var(--red);letter-spacing:1.5px;margin-top:8px}
-  .rest-skip{margin-top:28px;padding:12px 32px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer}
+.ex-list{display:flex;flex-direction:column;gap:8px}
+.ex-card{background:var(--panel);border:1px solid var(--edge);border-radius:12px;padding:12px;display:flex;align-items:center;gap:10px}
+.ex-card-info{flex:1;min-width:0}
+.ex-card-name{font-size:13px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ex-card-meta{font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.5px}
+.ex-card-num{font-family:'Anybody';font-size:11px;font-weight:700;color:var(--teal);background:rgba(0,255,208,0.08);border:1px solid rgba(0,255,208,0.2);border-radius:6px;padding:2px 7px;flex-shrink:0}
+.ex-card-actions{display:flex;gap:6px;flex-shrink:0}
+.ex-act-btn{width:30px;height:30px;border-radius:8px;border:1px solid var(--edge);background:var(--panel2);color:var(--dim);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ex-act-btn.del{border-color:rgba(255,51,85,0.2);color:var(--red)}
+.add-ex-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;border:1px dashed rgba(0,255,208,0.3);color:var(--teal);font-size:12px;font-weight:600;cursor:pointer;background:none;width:100%;margin-top:8px;font-family:'IBM Plex Mono'}
+.add-ex-btn:active{background:var(--teal-g)}
 
-  .goal-complete{position:fixed;inset:0;background:rgba(6,6,9,0.95);z-index:42;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
-  .goal-complete.hidden{opacity:0;visibility:hidden;pointer-events:none}
-  .goal-emoji{font-size:64px;margin-bottom:16px}
-  .goal-title{font-family:'Anybody';font-weight:900;font-size:28px;color:var(--green);letter-spacing:2px;margin-bottom:8px}
-  .goal-stats{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:24px}
-  .goal-stats b{color:var(--teal)}
-  .goal-dismiss{padding:14px 36px;border:none;border-radius:12px;background:var(--green);color:#000;font-family:'Anybody';font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+/* Exercise edit modal */
+.ex-modal{position:fixed;inset:0;background:rgba(6,6,9,0.85);z-index:60;display:flex;align-items:flex-end;transition:opacity .3s,visibility .3s}
+.ex-modal.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.ex-modal-sheet{background:var(--panel);border-radius:20px 20px 0 0;padding:20px 20px 40px;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ex-modal-title{font-family:'Anybody';font-weight:900;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:20px;text-align:center}
+.em-row{margin-bottom:16px}
+.em-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.em-input{width:100%;background:var(--panel2);border:1px solid var(--edge);border-radius:10px;padding:12px;color:var(--txt);font-family:'IBM Plex Mono';font-size:14px;outline:none;-webkit-user-select:text;user-select:text}
+.em-input:focus{border-color:rgba(0,255,208,0.3)}
+.type-toggle{display:flex;background:var(--panel2);border-radius:10px;overflow:hidden;border:1px solid var(--edge)}
+.type-btn{flex:1;padding:10px;text-align:center;font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer;color:var(--dim);border:none;background:none;transition:.15s}
+.type-btn.active{background:rgba(0,255,208,0.15);color:var(--teal)}
+.em-num-row{display:flex;align-items:center;gap:10px}
+.em-num-row .s-val{flex:1;text-align:center}
+.em-two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.em-footer{display:flex;gap:8px;margin-top:20px}
+.em-btn{flex:1;padding:14px;border-radius:12px;border:1px solid var(--edge);background:var(--panel2);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer}
+.em-btn.save{border-color:rgba(0,255,208,0.3);background:rgba(0,255,208,0.1);color:var(--teal)}
+.em-btn:active{opacity:.7}
+
+/* Rest overlay */
+.rest-overlay{position:fixed;inset:0;background:rgba(6,6,9,0.96);z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
+.rest-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.rest-label{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.rest-time{font-family:'Anybody';font-weight:900;font-size:96px;line-height:1;color:var(--orange)}
+.rest-sub{font-size:11px;color:var(--dim);margin-top:14px;letter-spacing:1px;text-transform:uppercase}
+.rest-next{font-size:15px;color:var(--teal);margin-top:6px;font-weight:600}
+.rest-skip{margin-top:28px;padding:12px 32px;border-radius:12px;border:1px solid var(--edge);background:var(--panel);color:var(--txt);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer}
+
+/* Goal complete */
+.goal-complete{position:fixed;inset:0;background:rgba(6,6,9,0.95);z-index:42;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
+.goal-complete.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.goal-emoji{font-size:64px;margin-bottom:16px}
+.goal-title{font-family:'Anybody';font-weight:900;font-size:28px;color:var(--green);letter-spacing:2px;margin-bottom:8px}
+.goal-stats{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:24px}
+.goal-stats b{color:var(--teal)}
+.goal-dismiss{padding:14px 36px;border:none;border-radius:12px;background:var(--green);color:#000;font-family:'Anybody';font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
 </style>
 </head>
 <body>
@@ -123,7 +175,7 @@
 <div class="top">
   <div class="logo">REPOS</div>
   <div class="top-right">
-    <div class="gear-btn" onclick="openSettings()">⚙</div>
+    <div class="icon-btn" onclick="openProgram()">☰</div>
     <div class="ble-pill" id="blePill" onclick="showOverlay()">
       <div class="dot" id="dot"></div>
       <span id="bleLabel">Déconnecté</span>
@@ -135,8 +187,9 @@
 
 <div class="hero">
   <div class="big-count">
+    <div class="ex-name" id="exName">—</div>
     <div class="big-num" id="count">0</div>
-    <div class="big-label">Reps</div>
+    <div class="big-label" id="countLabel">Reps</div>
     <div class="goal-display" id="goalDisplay"></div>
   </div>
   <div class="metric-col">
@@ -149,7 +202,20 @@
   </div>
 </div>
 
-<div class="progress-wrap" id="progressWrap" style="display:none">
+<div class="ex-dots" id="exDots"></div>
+
+<div class="zone-section">
+  <div class="zone-label">
+    <span id="zoneMinLbl">Zone min: —</span>
+    <span id="zoneMaxLbl">Zone max: —</span>
+  </div>
+  <div class="zone-track" id="zoneTrack">
+    <div class="zone-band" id="zoneBand" style="left:0%;width:0%"></div>
+    <div class="zone-cursor" id="zoneCursor" style="left:50%"></div>
+  </div>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
   <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
   <div class="progress-info"><span id="progressLeft"></span><span id="progressRight"></span></div>
 </div>
@@ -173,42 +239,136 @@
 
 <div class="controls">
   <button class="cbtn rst" onclick="fullReset()">Reset</button>
-  <button class="cbtn go" id="goBtn2" onclick="startSeries()">▶ Démarrer</button>
+  <button class="cbtn go" id="goBtn2" onclick="startWorkout()">▶ Démarrer</button>
 </div>
 
+<!-- BLE overlay -->
 <div class="ov" id="ov">
   <div class="ov-icon">📡</div>
   <h1>REPOS</h1>
-  <p>Connecte ton boîtier REPOS en Bluetooth pour compter tes reps avec le capteur LiDAR.</p>
+  <p>Connecte ton boîtier REPOS en Bluetooth pour utiliser le capteur LiDAR.</p>
   <button class="go-btn" id="goBtn" onclick="connectBLE()">Connecter</button>
   <div class="ov-sub">VL53L1X — 50 mesures/sec</div>
 </div>
 
-<div class="settings hidden" id="settingsPanel">
-  <h2>Réglages</h2>
-  <div class="setting-row">
-    <div class="setting-label">Reps par série<small>0 = illimité</small></div>
-    <div class="setting-input"><div class="s-btn" onclick="adj('goal',-5)">−</div><div class="s-val" id="setGoal">20</div><div class="s-btn" onclick="adj('goal',5)">+</div></div>
+<!-- Program panel -->
+<div class="prog-panel hidden" id="progPanel">
+  <div class="prog-header">
+    <div class="prog-title">Programme</div>
+    <div class="prog-close" onclick="closeProgram()">✕</div>
   </div>
-  <div class="setting-row">
-    <div class="setting-label">Nombre de séries<small>0 = illimité</small></div>
-    <div class="setting-input"><div class="s-btn" onclick="adj('sets',-1)">−</div><div class="s-val" id="setSets">3</div><div class="s-btn" onclick="adj('sets',1)">+</div></div>
+  <div class="prog-body">
+    <div class="prog-section">
+      <div class="prog-section-title">Configuration des séries</div>
+      <div class="prog-row">
+        <div class="prog-row-label">Nombre de séries<small>0 = illimité</small></div>
+        <div class="s-input">
+          <div class="s-btn" onclick="adjProg('sets',-1)">−</div>
+          <div class="s-val" id="pSets">3</div>
+          <div class="s-btn" onclick="adjProg('sets',1)">+</div>
+        </div>
+      </div>
+      <div class="prog-row">
+        <div class="prog-row-label">Repos inter-séries<small>en secondes</small></div>
+        <div class="s-input">
+          <div class="s-btn" onclick="adjProg('seriesRest',-5)">−</div>
+          <div class="s-val" id="pSeriesRest">90</div>
+          <div class="s-btn" onclick="adjProg('seriesRest',5)">+</div>
+        </div>
+      </div>
+    </div>
+    <div class="prog-section">
+      <div class="prog-section-title">Exercices (dans l'ordre)</div>
+      <div class="ex-list" id="exList"></div>
+      <button class="add-ex-btn" onclick="addExercise()">+ Ajouter un exercice</button>
+    </div>
   </div>
-  <div class="setting-row">
-    <div class="setting-label">Pause entre séries<small>en secondes</small></div>
-    <div class="setting-input"><div class="s-btn" onclick="adj('rest',-5)">−</div><div class="s-val" id="setRest">60</div><div class="s-btn" onclick="adj('rest',5)">+</div></div>
-  </div>
-  <button class="settings-save" onclick="saveSettings()">OK</button>
 </div>
 
+<!-- Exercise edit modal -->
+<div class="ex-modal hidden" id="exModal">
+  <div class="ex-modal-sheet">
+    <div class="ex-modal-title" id="modalTitle">Exercice</div>
+
+    <div class="em-row">
+      <div class="em-label">Nom</div>
+      <input class="em-input" id="emName" type="text" placeholder="Ex: Curl biceps" maxlength="30">
+    </div>
+
+    <div class="em-row">
+      <div class="em-label">Type</div>
+      <div class="type-toggle">
+        <button class="type-btn active" id="typeReps" onclick="setExType('reps')">REPS</button>
+        <button class="type-btn" id="typeDur" onclick="setExType('duration')">DURÉE</button>
+      </div>
+    </div>
+
+    <div class="em-row" id="emRepsRow">
+      <div class="em-label">Nombre de répétitions</div>
+      <div class="em-num-row">
+        <div class="s-btn" onclick="adjModal('reps',-1)">−</div>
+        <div class="s-val" id="emReps">12</div>
+        <div class="s-btn" onclick="adjModal('reps',1)">+</div>
+      </div>
+    </div>
+
+    <div class="em-row" id="emDurRow" style="display:none">
+      <div class="em-label">Durée (secondes)</div>
+      <div class="em-num-row">
+        <div class="s-btn" onclick="adjModal('duration',-5)">−</div>
+        <div class="s-val" id="emDur">30</div>
+        <div class="s-btn" onclick="adjModal('duration',5)">+</div>
+      </div>
+    </div>
+
+    <div class="em-row">
+      <div class="em-label">Zone de validation (distance mm)</div>
+      <div class="em-two-col">
+        <div>
+          <div class="em-label">Min</div>
+          <div class="em-num-row">
+            <div class="s-btn" onclick="adjModal('distMin',-5)">−</div>
+            <div class="s-val" id="emDistMin">30</div>
+            <div class="s-btn" onclick="adjModal('distMin',5)">+</div>
+          </div>
+        </div>
+        <div>
+          <div class="em-label">Max</div>
+          <div class="em-num-row">
+            <div class="s-btn" onclick="adjModal('distMax',-5)">−</div>
+            <div class="s-val" id="emDistMax">120</div>
+            <div class="s-btn" onclick="adjModal('distMax',5)">+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="em-row">
+      <div class="em-label">Repos après cet exercice (sec)</div>
+      <div class="em-num-row">
+        <div class="s-btn" onclick="adjModal('restAfter',-5)">−</div>
+        <div class="s-val" id="emRest">60</div>
+        <div class="s-btn" onclick="adjModal('restAfter',5)">+</div>
+      </div>
+    </div>
+
+    <div class="em-footer">
+      <button class="em-btn" onclick="cancelModal()">Annuler</button>
+      <button class="em-btn save" onclick="saveModal()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rest overlay -->
 <div class="rest-overlay hidden" id="restOverlay">
-  <div class="rest-label">Repos</div>
+  <div class="rest-label" id="restLabel">Repos</div>
   <div class="rest-time" id="restTime">60</div>
-  <div class="rest-sub" id="restSub"></div>
-  <div class="rest-lidar">Capteur en veille</div>
+  <div class="rest-sub" id="restSub">Prochain :</div>
+  <div class="rest-next" id="restNext"></div>
   <button class="rest-skip" onclick="skipRest()">Passer</button>
 </div>
 
+<!-- Goal complete -->
 <div class="goal-complete hidden" id="goalComplete">
   <div class="goal-emoji">🏆</div>
   <div class="goal-title">TERMINÉ !</div>
@@ -217,181 +377,282 @@
 </div>
 
 <script>
-const SVC='4fafc201-1fb5-459e-8fcc-c5c9c331914b',CHC='beb5483e-36e1-4688-b7f5-ea07361b26a8',CHP='d1a7e8b2-4c5f-6a3d-9e2b-1f8c7d4a5b6e',CHW='1c95d5e3-d8f7-413a-bf3d-7a2e5d7be87e';
-let dev,srv,chCount,chProf,chCmd,bleOk=false;
+// ===== BLE =====
+const SVC='4fafc201-1fb5-459e-8fcc-c5c9c331914b';
+const CHP='d1a7e8b2-4c5f-6a3d-9e2b-1f8c7d4a5b6e';
+const CHW='1c95d5e3-d8f7-413a-bf3d-7a2e5d7be87e';
+let dev,srv,chProf,chCmd,bleOk=false;
 
-const SEUIL=70,MAXD=500,MAXPTS=600;
-let pts=[],lastCnt=0,firstRepTime=null;
-let phase='idle',prevD=null,prevT=null;
-let curDown=[],curUp=[],allDown=[],allUp=[];
+// ===== PROGRAM =====
+let program={sets:3,seriesRest:90,exercises:[
+  {id:1,name:'Curl biceps',type:'reps',reps:12,duration:30,distMin:30,distMax:120,restAfter:60}
+]};
+let nextId=2;
 
-let CFG={goal:20,sets:3,rest:60};
-let curSeries=1,curCount=0,totalAll=0;
-let seriesDone=false,restTimerId=null,restRem=0;
+function saveProg(){try{localStorage.setItem('repos_prog',JSON.stringify(program));}catch(e){}}
+function loadProg(){
+  try{const s=localStorage.getItem('repos_prog');if(s){program=JSON.parse(s);nextId=program.exercises.reduce((m,e)=>Math.max(m,e.id+1),1);}}catch(e){}
+}
+
+// ===== WORKOUT STATE =====
 let appState='idle';
+let curSeries=1,curExIdx=0,curCount=0,totalAll=0;
+let firstRepTime=null,inZone=false,lastRepTime=0,exDone=false;
+let durTimer=null,durationRem=0;
+let restTimerId=null,restRem=0,restCb=null;
+let allDown=[],allUp=[],curDown=[],curUp=[];
+let prevD=null,prevT=null;
 
+// ===== SENSOR =====
+let pts=[];
+const MAXPTS=600,MAXD=800,REP_DEBOUNCE=500;
+
+// ===== AUDIO =====
 let actx;
 function bip(f=700,d=40){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.frequency.value=f;o.type='sine';g.gain.setValueAtTime(.25,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+d/1000);o.start();o.stop(actx.currentTime+d/1000);}catch(e){}}
 function bipOk(){bip(523,80);setTimeout(()=>bip(659,80),100);setTimeout(()=>bip(784,120),200);}
 
 const $=id=>document.getElementById(id);
-async function sendRaw(c){if(!bleOk||!chCmd)return;try{await chCmd.writeValue(new TextEncoder().encode(c));}catch(e){console.error(e);}}
-
+async function sendRaw(c){if(!bleOk||!chCmd)return;try{await chCmd.writeValue(new TextEncoder().encode(c));}catch(e){}}
 function setStatus(t,c){const s=$('statusLine');s.textContent=t;s.className='status-line'+(c?' '+c:'');}
+function getCurEx(){return program.exercises[curExIdx]||null;}
 
-// Settings
-function openSettings(){if(appState!=='idle')return;$('settingsPanel').classList.remove('hidden');updSetUI();}
-function updSetUI(){$('setGoal').textContent=CFG.goal||'∞';$('setSets').textContent=CFG.sets||'∞';$('setRest').textContent=CFG.rest;}
-function adj(k,d){if(k==='goal')CFG.goal=Math.max(0,CFG.goal+d);if(k==='sets')CFG.sets=Math.max(0,CFG.sets+d);if(k==='rest')CFG.rest=Math.max(5,CFG.rest+d);updSetUI();}
-function saveSettings(){$('settingsPanel').classList.add('hidden');updGoal();updProgress();}
+// ===== PROGRAM EDITOR =====
+function openProgram(){
+  if(appState!=='idle')return;
+  renderProgPanel();
+  $('progPanel').classList.remove('hidden');
+}
+function closeProgram(){$('progPanel').classList.add('hidden');}
 
-function updGoal(){
-  const g=$('goalDisplay');
-  if(CFG.goal>0){g.innerHTML='/ <span>'+CFG.goal+'</span>';$('progressWrap').style.display='block';$('seriesLabel').textContent=CFG.sets>0?'/ '+CFG.sets:'Série';}
-  else{g.innerHTML='';$('progressWrap').style.display='none';$('seriesLabel').textContent='Série';}
+function renderProgPanel(){
+  $('pSets').textContent=program.sets||'∞';
+  $('pSeriesRest').textContent=program.seriesRest;
+  const list=$('exList');list.innerHTML='';
+  program.exercises.forEach((ex,i)=>{
+    const meta=ex.type==='reps'
+      ?`${ex.reps} reps · zone ${ex.distMin}–${ex.distMax}mm · repos ${ex.restAfter}s`
+      :`${ex.duration}s · zone ${ex.distMin}–${ex.distMax}mm · repos ${ex.restAfter}s`;
+    const card=document.createElement('div');
+    card.className='ex-card';
+    card.innerHTML=`<div class="ex-card-num">${i+1}</div>
+      <div class="ex-card-info">
+        <div class="ex-card-name">${ex.name}</div>
+        <div class="ex-card-meta">${meta}</div>
+      </div>
+      <div class="ex-card-actions">
+        <div class="ex-act-btn" onclick="editExercise(${i})">✎</div>
+        <div class="ex-act-btn del" onclick="deleteExercise(${i})">✕</div>
+      </div>`;
+    list.appendChild(card);
+  });
 }
 
-function updProgress(){
-  if(CFG.goal<=0)return;
-  const pct=Math.min(curCount/CFG.goal*100,100);
-  $('progressFill').style.width=pct+'%';$('progressFill').classList.toggle('done',pct>=100);
-  const rem=Math.max(0,CFG.goal-curCount);
-  $('progressLeft').textContent=rem>0?rem+' restantes':'Terminé !';
-  $('progressRight').textContent=curCount+'/'+CFG.goal;
+function adjProg(k,d){
+  if(k==='sets')program.sets=Math.max(0,program.sets+d);
+  if(k==='seriesRest')program.seriesRest=Math.max(0,program.seriesRest+d);
+  $('pSets').textContent=program.sets||'∞';
+  $('pSeriesRest').textContent=program.seriesRest;
+  saveProg();
 }
 
-// Start
-async function startSeries(){
-  if(!bleOk||appState==='running')return;
+function deleteExercise(i){
+  if(program.exercises.length<=1)return;
+  program.exercises.splice(i,1);
+  saveProg();renderProgPanel();
+}
+
+// ===== EXERCISE MODAL =====
+let editingIdx=-1,mData={};
+
+function addExercise(){
+  editingIdx=-1;
+  mData={name:'',type:'reps',reps:12,duration:30,distMin:30,distMax:120,restAfter:60};
+  openModal('Nouvel exercice');
+}
+function editExercise(i){
+  editingIdx=i;mData={...program.exercises[i]};
+  openModal('Modifier exercice');
+}
+function openModal(title){
+  $('modalTitle').textContent=title;
+  $('emName').value=mData.name;
+  setExType(mData.type);
+  syncModalVals();
+  $('exModal').classList.remove('hidden');
+}
+function syncModalVals(){
+  $('emReps').textContent=mData.reps;
+  $('emDur').textContent=mData.duration;
+  $('emDistMin').textContent=mData.distMin;
+  $('emDistMax').textContent=mData.distMax;
+  $('emRest').textContent=mData.restAfter;
+}
+function setExType(t){
+  mData.type=t;
+  $('typeReps').classList.toggle('active',t==='reps');
+  $('typeDur').classList.toggle('active',t==='duration');
+  $('emRepsRow').style.display=t==='reps'?'block':'none';
+  $('emDurRow').style.display=t==='duration'?'block':'none';
+}
+function adjModal(k,d){
+  if(k==='reps')mData.reps=Math.max(1,mData.reps+d);
+  if(k==='duration')mData.duration=Math.max(5,mData.duration+d);
+  if(k==='distMin'){mData.distMin=Math.max(0,mData.distMin+d);if(mData.distMin>=mData.distMax-5)mData.distMin=Math.max(0,mData.distMax-5);}
+  if(k==='distMax'){mData.distMax=Math.max(10,Math.min(MAXD,mData.distMax+d));if(mData.distMax<=mData.distMin+5)mData.distMax=mData.distMin+5;}
+  if(k==='restAfter')mData.restAfter=Math.max(0,mData.restAfter+d);
+  syncModalVals();
+}
+function cancelModal(){$('exModal').classList.add('hidden');}
+function saveModal(){
+  mData.name=$('emName').value.trim()||'Exercice';
+  if(editingIdx>=0){
+    program.exercises[editingIdx]={...program.exercises[editingIdx],...mData};
+  } else {
+    program.exercises.push({id:nextId++,...mData});
+  }
+  saveProg();$('exModal').classList.add('hidden');renderProgPanel();
+}
+
+// ===== WORKOUT FLOW =====
+async function startWorkout(){
+  if(!bleOk||appState==='running'||program.exercises.length===0)return;
   if(appState==='idle'||appState==='finished'){
-    await sendRaw('RESET');
-    curSeries=1;curCount=0;totalAll=0;firstRepTime=null;lastCnt=0;
-    pts=[];allDown=[];allUp=[];curDown=[];curUp=[];
-    phase='idle';prevD=null;prevT=null;seriesDone=false;
+    curSeries=1;curExIdx=0;curCount=0;totalAll=0;
+    firstRepTime=null;inZone=false;lastRepTime=0;exDone=false;
+    pts=[];allDown=[];allUp=[];curDown=[];curUp=[];prevD=null;prevT=null;
     $('dMin').textContent=$('dMax').textContent=$('dAvg').textContent='—';
     $('uMin').textContent=$('uMax').textContent=$('uAvg').textContent='—';
-    $('rpm').textContent='—';$('count').textContent='0';$('seriesDisp').textContent='1';
-    updProgress();
+    $('count').textContent='0';$('seriesDisp').textContent='1';
   }
   await sendRaw('START');
-  appState='running';seriesDone=false;
-  setStatus('Série '+curSeries+(CFG.sets>0?' / '+CFG.sets:'')+' — Capteur actif','active');
-  $('goBtn2').disabled=true;$('goBtn2').textContent='En cours...';
+  appState='running';
+  startCurEx();
 }
 
-// Rest
-function startRest(){
+function startCurEx(){
+  const ex=getCurEx();if(!ex)return;
+  curCount=0;inZone=false;lastRepTime=0;exDone=false;
+  curDown=[];curUp=[];
+  if(durTimer){clearInterval(durTimer);durTimer=null;}
+  updExDisplay();
+  const serTxt=program.sets>0?` — ${curSeries}/${program.sets}`:'';
+  setStatus(`${ex.name}${serTxt}`,'active');
+  $('goBtn2').disabled=true;$('goBtn2').textContent='En cours...';
+  if(ex.type==='duration'){
+    durationRem=ex.duration;updCountDisplay();
+    durTimer=setInterval(()=>{
+      durationRem--;updCountDisplay();
+      if(durationRem<=0){clearInterval(durTimer);durTimer=null;onExDone();}
+    },1000);
+  }
+}
+
+function onExDone(){
+  if(exDone)return;exDone=true;
+  bipOk();totalAll+=curCount;updSpeed();
+  const ex=getCurEx();
+  const isLastEx=curExIdx>=program.exercises.length-1;
+  const isLastSer=program.sets>0&&curSeries>=program.sets;
+  if(!isLastEx){
+    const nextEx=program.exercises[curExIdx+1];
+    const go=()=>{curExIdx++;startCurEx();};
+    ex.restAfter>0?startRest('Repos',ex.restAfter,nextEx.name,go):go();
+  } else if(!isLastSer){
+    const go=()=>{curSeries++;curExIdx=0;startCurEx();};
+    program.seriesRest>0
+      ?startRest('Repos inter-séries',program.seriesRest,`Série ${curSeries+1}`,go)
+      :go();
+  } else {
+    finishAll();
+  }
+}
+
+// ===== REST =====
+function startRest(label,dur,nextLabel,cb){
   appState='resting';sendRaw('PAUSE');
-  setStatus('Repos — Capteur en veille','pause');
-  restRem=CFG.rest;$('restOverlay').classList.remove('hidden');updRestDisp();
+  setStatus('Repos','pause');
+  restCb=cb;restRem=dur;
+  $('restLabel').textContent=label;
+  $('restNext').textContent=nextLabel;
+  $('restOverlay').classList.remove('hidden');
+  updRestDisp();
   restTimerId=setInterval(()=>{
-    restRem--;
+    restRem--;updRestDisp();
     if(restRem<=0){clearInterval(restTimerId);restTimerId=null;endRest();}
-    updRestDisp();
     if(restRem===3)bip(440,100);if(restRem===2)bip(550,100);if(restRem===1)bip(660,100);if(restRem===0)bip(880,200);
   },1000);
 }
-
 function updRestDisp(){
   const m=Math.floor(restRem/60),s=restRem%60;
   $('restTime').textContent=(m>0?m+':':'')+String(s).padStart(m>0?2:1,'0');
-  $('restSub').textContent='Série '+(curSeries+1)+(CFG.sets>0?' / '+CFG.sets:'')+' dans...';
 }
-
 function skipRest(){if(restTimerId){clearInterval(restTimerId);restTimerId=null;}endRest();}
-
 async function endRest(){
   $('restOverlay').classList.add('hidden');
-  curSeries++;curCount=0;seriesDone=false;
-  await sendRaw('SERIES');await sendRaw('START');
   appState='running';
-  setStatus('Série '+curSeries+(CFG.sets>0?' / '+CFG.sets:'')+' — Capteur actif','active');
-  updProgress();
+  await sendRaw('START');
+  if(restCb){const cb=restCb;restCb=null;cb();}
 }
 
-// Finish
+// ===== FINISH =====
 function finishAll(){
   appState='finished';sendRaw('PAUSE');
-  setStatus('Terminé — Capteur éteint','done');
+  setStatus('Programme terminé','done');
   $('goBtn2').disabled=false;$('goBtn2').textContent='▶ Recommencer';
   let elapsed='';
   if(firstRepTime){const sec=Math.round((Date.now()-firstRepTime)/1000);elapsed=Math.floor(sec/60)+'min '+sec%60+'s';}
-  let html='<b>'+totalAll+'</b> reps au total<br><b>'+curSeries+'</b> série'+(curSeries>1?'s':'')+' complétée'+(curSeries>1?'s':'')+'<br>';
-  if(elapsed)html+='Durée: <b>'+elapsed+'</b><br>';
-  if(allDown.length>0)html+='Vitesse moy. descente: <b>'+Math.round(allDown.reduce((a,b)=>a+b,0)/allDown.length)+'</b> mm/s';
+  let html=`<b>${totalAll}</b> reps au total<br><b>${curSeries}</b> série${curSeries>1?'s':''} complétée${curSeries>1?'s':''}<br>`;
+  if(elapsed)html+=`Durée: <b>${elapsed}</b>`;
   $('goalStats').innerHTML=html;$('goalComplete').classList.remove('hidden');bipOk();
 }
 function dismissGoal(){$('goalComplete').classList.add('hidden');}
 
-// Reset
+// ===== RESET =====
 async function fullReset(){
   if(restTimerId){clearInterval(restTimerId);restTimerId=null;}
+  if(durTimer){clearInterval(durTimer);durTimer=null;}
   $('restOverlay').classList.add('hidden');$('goalComplete').classList.add('hidden');
   await sendRaw('RESET');await sendRaw('PAUSE');
-  appState='idle';curSeries=1;curCount=0;totalAll=0;firstRepTime=null;lastCnt=0;
-  pts=[];allDown=[];allUp=[];curDown=[];curUp=[];phase='idle';prevD=null;prevT=null;seriesDone=false;
+  appState='idle';curSeries=1;curExIdx=0;curCount=0;totalAll=0;
+  firstRepTime=null;inZone=false;lastRepTime=0;exDone=false;
+  pts=[];allDown=[];allUp=[];curDown=[];curUp=[];prevD=null;prevT=null;
   $('count').textContent='0';$('seriesDisp').textContent='1';$('rpm').textContent='—';$('liveDist').textContent='— mm';
   $('dMin').textContent=$('dMax').textContent=$('dAvg').textContent='—';
   $('uMin').textContent=$('uMax').textContent=$('uAvg').textContent='—';
   $('goBtn2').disabled=false;$('goBtn2').textContent='▶ Démarrer';
-  setStatus('En attente','');updProgress();bip(440,100);
+  setStatus('En attente','');
+  updExDisplay();bip(440,100);
 }
 
-// BLE
-async function connectBLE(){
-  const b=$('goBtn');b.textContent='RECHERCHE...';b.disabled=true;
-  try{
-    dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[SVC]});
-    dev.addEventListener('gattserverdisconnected',onDisco);
-    srv=await dev.gatt.connect();
-    const s=await srv.getPrimaryService(SVC);
-    chCount=await s.getCharacteristic(CHC);await chCount.startNotifications();chCount.addEventListener('characteristicvaluechanged',onCnt);
-    chProf=await s.getCharacteristic(CHP);await chProf.startNotifications();chProf.addEventListener('characteristicvaluechanged',onProf);
-    chCmd=await s.getCharacteristic(CHW);
-    bleOk=true;$('ov').classList.add('hidden');$('dot').classList.add('on');$('bleLabel').textContent='Connecté';$('blePill').classList.add('on');
-    resize();draw();updGoal();setStatus('Connecté — Prêt','');
-    try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}
-  }catch(e){console.error(e);b.textContent='CONNECTER';b.disabled=false;}
+// ===== REP DETECTION =====
+function checkRep(d,t){
+  if(appState!=='running')return;
+  const ex=getCurEx();
+  if(!ex||ex.type!=='reps'||exDone)return;
+  const was=inZone;
+  inZone=d>=ex.distMin&&d<=ex.distMax;
+  if(inZone&&!was&&(t-lastRepTime)>REP_DEBOUNCE){
+    lastRepTime=t;onRep();
+  }
 }
 
-function onDisco(){
-  bleOk=false;appState='idle';
-  if(restTimerId){clearInterval(restTimerId);restTimerId=null;}
-  $('restOverlay').classList.add('hidden');
-  $('dot').classList.remove('on');$('bleLabel').textContent='Déconnecté';$('blePill').classList.remove('on');
-  $('ov').classList.remove('hidden');$('goBtn').textContent='RECONNECTER';$('goBtn').disabled=false;
-  setStatus('Déconnecté','');
-}
-function showOverlay(){if(!bleOk)$('ov').classList.remove('hidden');}
-
-// Count
-function onCnt(e){
-  const v=new TextDecoder().decode(e.target.value).split(',');
-  if(v.length<3)return;
-  const c=+v[0],tot=+v[1],ser=+v[2];
-  if(c>lastCnt||(c===1&&lastCnt>1))onRep(c);
-  lastCnt=c;curCount=c;totalAll=tot;
-  $('count').textContent=c;$('seriesDisp').textContent=curSeries;
-  if(firstRepTime&&tot>0){const m=(Date.now()-firstRepTime)/60000;$('rpm').textContent=m>.05?Math.round(tot/m):'—';}
-  updProgress();
-}
-
-function onRep(c){
+function onRep(){
   if(!firstRepTime)firstRepTime=Date.now();
+  curCount++;
   bip(700,45);if(navigator.vibrate)navigator.vibrate(25);
   $('count').classList.add('pop');setTimeout(()=>$('count').classList.remove('pop'),150);
   if(curDown.length>0)allDown.push(...curDown);
   if(curUp.length>0)allUp.push(...curUp);
-  curDown=[];curUp=[];phase='idle';prevD=null;prevT=null;
-  updSpeed();
-  if(CFG.goal>0&&c>=CFG.goal&&!seriesDone){
-    seriesDone=true;bipOk();
-    if(CFG.sets>0&&curSeries>=CFG.sets)setTimeout(()=>finishAll(),600);
-    else setTimeout(()=>startRest(),800);
+  curDown=[];curUp=[];
+  updCountDisplay();updSpeed();updRpm();
+  const ex=getCurEx();
+  if(ex&&curCount>=ex.reps&&!exDone){
+    setTimeout(()=>onExDone(),400);
   }
 }
 
-// Profile
+// ===== DISTANCE PROCESSING =====
 function onProf(e){
   const v=new TextDecoder().decode(e.target.value);
   v.split('|').forEach(s=>{
@@ -399,9 +660,86 @@ function onProf(e){
     const t=+p[0],d=+p[1];
     pts.push({t,d});if(pts.length>MAXPTS)pts.shift();
     $('liveDist').textContent=d+' mm';
-    if(prevD!==null&&prevT!==null){const dt=(t-prevT)/1000;if(dt>0){const dd=d-prevD,sp=Math.abs(dd/dt);if(sp>5){if(dd<0){if(phase==='ascending'||phase==='idle')phase='descending';curDown.push(sp);}else{if(phase==='descending'||phase==='idle')phase='ascending';curUp.push(sp);}}}}
+    updZoneBar(d);
+    checkRep(d,t);
+    if(prevD!==null&&prevT!==null){
+      const dt=(t-prevT)/1000;
+      if(dt>0){const dd=d-prevD,sp=Math.abs(dd/dt);if(sp>5){if(dd<0)curDown.push(sp);else curUp.push(sp);}}
+    }
     prevD=d;prevT=t;
   });
+}
+
+// ===== DISPLAY =====
+function updExDisplay(){
+  const ex=getCurEx();
+  $('exName').textContent=ex?ex.name:'—';
+  updExDots();updZoneLabels();updCountDisplay();updSeriesDisp();
+}
+
+function updCountDisplay(){
+  const ex=getCurEx();
+  if(!ex){$('count').textContent='0';$('countLabel').textContent='Reps';$('goalDisplay').innerHTML='';$('progressFill').style.width='0%';return;}
+  if(ex.type==='reps'){
+    $('count').textContent=curCount;
+    $('countLabel').textContent='Reps';
+    $('goalDisplay').innerHTML='/ <span>'+ex.reps+'</span>';
+    const pct=Math.min(curCount/ex.reps*100,100);
+    $('progressFill').style.width=pct+'%';$('progressFill').classList.toggle('done',pct>=100);
+    $('progressLeft').textContent=Math.max(0,ex.reps-curCount)+' restantes';
+    $('progressRight').textContent=curCount+'/'+ex.reps;
+  } else {
+    $('count').textContent=durationRem;
+    $('countLabel').textContent='sec';
+    $('goalDisplay').innerHTML='/ <span>'+ex.duration+'</span>';
+    const pct=Math.max(0,(1-durationRem/ex.duration)*100);
+    $('progressFill').style.width=pct+'%';$('progressFill').classList.toggle('done',pct>=100);
+    $('progressLeft').textContent=durationRem+'s restantes';
+    $('progressRight').textContent=Math.round(pct)+'%';
+  }
+  $('progressWrap').style.display='block';
+}
+
+function updSeriesDisp(){
+  $('seriesDisp').textContent=curSeries;
+  $('seriesLabel').textContent=program.sets>0?'/ '+program.sets:'Série';
+}
+
+function updRpm(){
+  if(firstRepTime&&totalAll+curCount>0){
+    const m=(Date.now()-firstRepTime)/60000;
+    $('rpm').textContent=m>0.05?Math.round((totalAll+curCount)/m):'—';
+  }
+}
+
+function updExDots(){
+  const dots=$('exDots');dots.innerHTML='';
+  program.exercises.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='ex-dot'+(i<curExIdx?' done':i===curExIdx?' active':'');
+    dots.appendChild(d);
+  });
+}
+
+function updZoneLabels(){
+  const ex=getCurEx();
+  if(ex){
+    $('zoneMinLbl').textContent='Min: '+ex.distMin+'mm';
+    $('zoneMaxLbl').textContent='Max: '+ex.distMax+'mm';
+    $('zoneBand').style.left=(ex.distMin/MAXD*100)+'%';
+    $('zoneBand').style.width=((ex.distMax-ex.distMin)/MAXD*100)+'%';
+  } else {
+    $('zoneMinLbl').textContent='Min: —';
+    $('zoneMaxLbl').textContent='Max: —';
+    $('zoneBand').style.width='0%';
+  }
+}
+
+function updZoneBar(d){
+  const pct=Math.min(d/MAXD*100,100);
+  $('zoneCursor').style.left=pct+'%';
+  const ex=getCurEx();
+  $('zoneCursor').classList.toggle('in-zone',!!(ex&&d>=ex.distMin&&d<=ex.distMax));
 }
 
 function updSpeed(){
@@ -409,7 +747,7 @@ function updSpeed(){
   if(allUp.length>0){$('uMin').textContent=Math.round(Math.min(...allUp));$('uMax').textContent=Math.round(Math.max(...allUp));$('uAvg').textContent=Math.round(allUp.reduce((a,b)=>a+b,0)/allUp.length);}
 }
 
-// Canvas
+// ===== CANVAS =====
 const cv=$('cv'),ctx2=cv.getContext('2d');
 function resize(){const r=cv.parentElement.getBoundingClientRect();cv.width=r.width*devicePixelRatio;cv.height=r.height*devicePixelRatio;ctx2.scale(devicePixelRatio,devicePixelRatio);}
 window.addEventListener('resize',resize);setTimeout(resize,120);
@@ -418,21 +756,71 @@ function draw(){
   const W=cv.width/devicePixelRatio,H=cv.height/devicePixelRatio;
   ctx2.clearRect(0,0,W,H);
   const P={t:8,r:8,b:20,l:34},cW=W-P.l-P.r,cH=H-P.t-P.b;
-  ctx2.strokeStyle='rgba(255,255,255,0.035)';ctx2.lineWidth=1;ctx2.fillStyle='rgba(255,255,255,0.18)';ctx2.font='9px IBM Plex Mono';ctx2.textAlign='right';
+  ctx2.strokeStyle='rgba(255,255,255,0.035)';ctx2.lineWidth=1;
+  ctx2.fillStyle='rgba(255,255,255,0.18)';ctx2.font='9px IBM Plex Mono';ctx2.textAlign='right';
   for(let i=0;i<=5;i++){const y=P.t+(cH/5)*i;ctx2.beginPath();ctx2.moveTo(P.l,y);ctx2.lineTo(W-P.r,y);ctx2.stroke();ctx2.fillText(Math.round(MAXD-(MAXD/5)*i),P.l-5,y+3);}
-  const sY=P.t+cH*(1-SEUIL/MAXD);ctx2.save();ctx2.strokeStyle='rgba(255,51,85,0.35)';ctx2.setLineDash([3,3]);ctx2.beginPath();ctx2.moveTo(P.l,sY);ctx2.lineTo(W-P.r,sY);ctx2.stroke();ctx2.restore();
-  ctx2.fillStyle='rgba(255,51,85,0.5)';ctx2.font='8px IBM Plex Mono';ctx2.textAlign='left';ctx2.fillText('SEUIL 70mm',P.l+4,sY-4);
-  if(pts.length<2){ctx2.fillStyle='rgba(255,255,255,0.1)';ctx2.font='12px IBM Plex Mono';ctx2.textAlign='center';ctx2.fillText(appState==='running'?'En attente de donnees...':'Capteur en veille',W/2,H/2);requestAnimationFrame(draw);return;}
+  const ex=getCurEx();
+  if(ex){
+    const y1=P.t+cH*(1-ex.distMax/MAXD),y2=P.t+cH*(1-ex.distMin/MAXD);
+    ctx2.fillStyle='rgba(0,255,208,0.05)';ctx2.fillRect(P.l,y1,cW,y2-y1);
+    ctx2.save();ctx2.strokeStyle='rgba(0,255,208,0.3)';ctx2.lineWidth=1;ctx2.setLineDash([3,3]);
+    ctx2.beginPath();ctx2.moveTo(P.l,y1);ctx2.lineTo(W-P.r,y1);ctx2.stroke();
+    ctx2.beginPath();ctx2.moveTo(P.l,y2);ctx2.lineTo(W-P.r,y2);ctx2.stroke();
+    ctx2.restore();
+    ctx2.fillStyle='rgba(0,255,208,0.5)';ctx2.font='8px IBM Plex Mono';ctx2.textAlign='left';ctx2.fillText('ZONE',P.l+4,y1-3);
+  }
+  if(pts.length<2){
+    ctx2.fillStyle='rgba(255,255,255,0.1)';ctx2.font='12px IBM Plex Mono';ctx2.textAlign='center';
+    ctx2.fillText(appState==='running'?'En attente de données...':'Capteur en veille',W/2,H/2);
+    requestAnimationFrame(draw);return;
+  }
   const t0c=pts[0].t,t1c=pts[pts.length-1].t,tR=Math.max(t1c-t0c,1);
-  for(let i=1;i<pts.length;i++){const x0=P.l+((pts[i-1].t-t0c)/tR)*cW,y0=P.t+cH*(1-pts[i-1].d/MAXD),x1=P.l+((pts[i].t-t0c)/tR)*cW,y1=P.t+cH*(1-pts[i].d/MAXD);ctx2.strokeStyle=pts[i].d<SEUIL?'rgba(255,51,85,0.9)':'rgba(0,255,208,0.85)';ctx2.lineWidth=pts[i].d<SEUIL?2.5:1.5;ctx2.beginPath();ctx2.moveTo(x0,y0);ctx2.lineTo(x1,y1);ctx2.stroke();}
-  ctx2.beginPath();for(let i=0;i<pts.length;i++){const x=P.l+((pts[i].t-t0c)/tR)*cW,y=P.t+cH*(1-pts[i].d/MAXD);if(i===0)ctx2.moveTo(x,y);else ctx2.lineTo(x,y);}
-  ctx2.lineTo(P.l+cW,P.t+cH);ctx2.lineTo(P.l,P.t+cH);ctx2.closePath();const grd=ctx2.createLinearGradient(0,P.t,0,P.t+cH);grd.addColorStop(0,'rgba(0,255,208,0.06)');grd.addColorStop(1,'rgba(0,255,208,0)');ctx2.fillStyle=grd;ctx2.fill();
+  for(let i=1;i<pts.length;i++){
+    const x0=P.l+((pts[i-1].t-t0c)/tR)*cW,y0=P.t+cH*(1-pts[i-1].d/MAXD);
+    const x1=P.l+((pts[i].t-t0c)/tR)*cW,y1=P.t+cH*(1-pts[i].d/MAXD);
+    const inZ=ex&&pts[i].d>=ex.distMin&&pts[i].d<=ex.distMax;
+    ctx2.strokeStyle=inZ?'rgba(52,211,153,0.95)':'rgba(0,255,208,0.85)';
+    ctx2.lineWidth=inZ?2.5:1.5;
+    ctx2.beginPath();ctx2.moveTo(x0,y0);ctx2.lineTo(x1,y1);ctx2.stroke();
+  }
+  ctx2.beginPath();
+  for(let i=0;i<pts.length;i++){const x=P.l+((pts[i].t-t0c)/tR)*cW,y=P.t+cH*(1-pts[i].d/MAXD);if(i===0)ctx2.moveTo(x,y);else ctx2.lineTo(x,y);}
+  ctx2.lineTo(P.l+cW,P.t+cH);ctx2.lineTo(P.l,P.t+cH);ctx2.closePath();
+  const grd=ctx2.createLinearGradient(0,P.t,0,P.t+cH);grd.addColorStop(0,'rgba(0,255,208,0.06)');grd.addColorStop(1,'rgba(0,255,208,0)');ctx2.fillStyle=grd;ctx2.fill();
   ctx2.fillStyle='rgba(255,255,255,0.15)';ctx2.font='9px IBM Plex Mono';ctx2.textAlign='left';ctx2.fillText('-'+(tR/1000).toFixed(0)+'s',P.l,H-3);ctx2.textAlign='right';ctx2.fillText('now',W-P.r,H-3);
   requestAnimationFrame(draw);
 }
 
+// ===== BLE =====
+async function connectBLE(){
+  const b=$('goBtn');b.textContent='RECHERCHE...';b.disabled=true;
+  try{
+    dev=await navigator.bluetooth.requestDevice({acceptAllDevices:true,optionalServices:[SVC]});
+    dev.addEventListener('gattserverdisconnected',onDisco);
+    srv=await dev.gatt.connect();
+    const s=await srv.getPrimaryService(SVC);
+    chProf=await s.getCharacteristic(CHP);await chProf.startNotifications();chProf.addEventListener('characteristicvaluechanged',onProf);
+    chCmd=await s.getCharacteristic(CHW);
+    bleOk=true;$('ov').classList.add('hidden');$('dot').classList.add('on');$('bleLabel').textContent='Connecté';$('blePill').classList.add('on');
+    resize();draw();updExDisplay();setStatus('Connecté — Prêt','');
+    try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}
+  }catch(e){console.error(e);b.textContent='CONNECTER';b.disabled=false;}
+}
+function onDisco(){
+  bleOk=false;appState='idle';
+  if(restTimerId){clearInterval(restTimerId);restTimerId=null;}
+  if(durTimer){clearInterval(durTimer);durTimer=null;}
+  $('restOverlay').classList.add('hidden');
+  $('dot').classList.remove('on');$('bleLabel').textContent='Déconnecté';$('blePill').classList.remove('on');
+  $('ov').classList.remove('hidden');$('goBtn').textContent='RECONNECTER';$('goBtn').disabled=false;
+  setStatus('Déconnecté','');
+}
+function showOverlay(){if(!bleOk)$('ov').classList.remove('hidden');}
+
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}}});
-updGoal();
+
+// ===== INIT =====
+loadProg();updExDisplay();draw();
 </script>
 </body>
 </html>
