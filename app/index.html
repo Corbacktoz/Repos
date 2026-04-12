@@ -35,6 +35,8 @@ body{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 .status-line.pause{color:var(--orange)}
 .status-line.done{color:var(--teal)}
 
+.prog-name-line{font-size:10px;letter-spacing:1.5px;text-align:center;padding:2px 16px 4px;color:var(--blue);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
 .hero{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 6px}
 .big-count{text-align:center;flex:1}
 .ex-name{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px;margin:0 auto 4px}
@@ -151,6 +153,39 @@ canvas{width:100%!important;height:100%!important;display:block}
 .em-btn.save{border-color:rgba(0,255,208,0.3);background:rgba(0,255,208,0.1);color:var(--teal)}
 .em-btn:active{opacity:.7}
 
+/* Editable number input */
+.s-val{cursor:pointer;-webkit-user-select:text;user-select:text}
+.s-val-input{font-family:'Anybody';font-size:20px;font-weight:700;color:var(--teal);background:var(--panel2);border:1px solid rgba(0,255,208,0.3);border-radius:8px;text-align:center;width:60px;padding:4px;outline:none;-webkit-user-select:text;user-select:text}
+
+/* Save slots */
+.save-section{margin-bottom:24px}
+.save-slots{display:flex;flex-direction:column;gap:6px}
+.save-slot{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--panel);border:1px solid var(--edge);border-radius:10px}
+.save-slot.active{border-color:rgba(0,255,208,0.3)}
+.save-slot-num{font-family:'Anybody';font-size:12px;font-weight:700;color:var(--dim);min-width:20px}
+.save-slot-info{flex:1;min-width:0}
+.save-slot-name{font-size:12px;font-weight:600;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.save-slot-meta{font-size:9px;color:var(--dim);margin-top:2px}
+.save-slot-empty{font-size:11px;color:var(--dim);font-style:italic}
+.save-slot-actions{display:flex;gap:5px;flex-shrink:0}
+.slot-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--edge);background:var(--panel2);color:var(--dim);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.slot-btn.load{color:var(--teal);border-color:rgba(0,255,208,0.2)}
+.slot-btn.save-act{color:var(--green);border-color:rgba(52,211,153,0.2)}
+.slot-btn.del{color:var(--red);border-color:rgba(255,51,85,0.2)}
+.slot-btn:active{opacity:.6}
+
+/* Slot name input modal */
+.slot-name-modal{position:fixed;inset:0;background:rgba(6,6,9,0.85);z-index:62;display:flex;align-items:center;justify-content:center;transition:opacity .2s,visibility .2s}
+.slot-name-modal.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.slot-name-box{background:var(--panel);border:1px solid var(--edge);border-radius:16px;padding:24px;width:280px;text-align:center}
+.slot-name-box h3{font-family:'Anybody';font-size:14px;font-weight:900;color:var(--teal);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.slot-name-input{width:100%;background:var(--panel2);border:1px solid var(--edge);border-radius:10px;padding:12px;color:var(--txt);font-family:'IBM Plex Mono';font-size:14px;outline:none;text-align:center;margin-bottom:16px;-webkit-user-select:text;user-select:text}
+.slot-name-input:focus{border-color:rgba(0,255,208,0.3)}
+.slot-name-btns{display:flex;gap:8px}
+.slot-name-btns button{flex:1;padding:12px;border-radius:10px;border:1px solid var(--edge);font-family:'IBM Plex Mono';font-size:12px;font-weight:600;cursor:pointer}
+.slot-name-btns .cancel{background:var(--panel2);color:var(--txt)}
+.slot-name-btns .confirm{background:rgba(0,255,208,0.1);border-color:rgba(0,255,208,0.3);color:var(--teal)}
+
 /* Rest overlay */
 .rest-overlay{position:fixed;inset:0;background:rgba(6,6,9,0.96);z-index:40;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .3s,visibility .3s}
 .rest-overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
@@ -184,6 +219,7 @@ canvas{width:100%!important;height:100%!important;display:block}
 </div>
 
 <div class="status-line" id="statusLine">En attente</div>
+<div class="prog-name-line" id="progNameLine"></div>
 
 <div class="hero">
   <div class="big-count">
@@ -259,12 +295,16 @@ canvas{width:100%!important;height:100%!important;display:block}
   </div>
   <div class="prog-body">
     <div class="prog-section">
+      <div class="prog-section-title">Programmes sauvegardés (7 max)</div>
+      <div class="save-slots" id="saveSlots"></div>
+    </div>
+    <div class="prog-section">
       <div class="prog-section-title">Configuration des séries</div>
       <div class="prog-row">
         <div class="prog-row-label">Nombre de séries<small>0 = illimité</small></div>
         <div class="s-input">
           <div class="s-btn" onclick="adjProg('sets',-1)">−</div>
-          <div class="s-val" id="pSets">3</div>
+          <div class="s-val" id="pSets" onclick="tapEdit(this,'sets','prog')">3</div>
           <div class="s-btn" onclick="adjProg('sets',1)">+</div>
         </div>
       </div>
@@ -272,7 +312,7 @@ canvas{width:100%!important;height:100%!important;display:block}
         <div class="prog-row-label">Repos inter-séries<small>en secondes</small></div>
         <div class="s-input">
           <div class="s-btn" onclick="adjProg('seriesRest',-5)">−</div>
-          <div class="s-val" id="pSeriesRest">90</div>
+          <div class="s-val" id="pSeriesRest" onclick="tapEdit(this,'seriesRest','prog')">90</div>
           <div class="s-btn" onclick="adjProg('seriesRest',5)">+</div>
         </div>
       </div>
@@ -307,7 +347,7 @@ canvas{width:100%!important;height:100%!important;display:block}
       <div class="em-label">Nombre de répétitions</div>
       <div class="em-num-row">
         <div class="s-btn" onclick="adjModal('reps',-1)">−</div>
-        <div class="s-val" id="emReps">12</div>
+        <div class="s-val" id="emReps" onclick="tapEdit(this,'reps','modal')">12</div>
         <div class="s-btn" onclick="adjModal('reps',1)">+</div>
       </div>
     </div>
@@ -316,7 +356,7 @@ canvas{width:100%!important;height:100%!important;display:block}
       <div class="em-label">Durée (secondes)</div>
       <div class="em-num-row">
         <div class="s-btn" onclick="adjModal('duration',-5)">−</div>
-        <div class="s-val" id="emDur">30</div>
+        <div class="s-val" id="emDur" onclick="tapEdit(this,'duration','modal')">30</div>
         <div class="s-btn" onclick="adjModal('duration',5)">+</div>
       </div>
     </div>
@@ -328,7 +368,7 @@ canvas{width:100%!important;height:100%!important;display:block}
           <div class="em-label">Min</div>
           <div class="em-num-row">
             <div class="s-btn" onclick="adjModal('distMin',-5)">−</div>
-            <div class="s-val" id="emDistMin">30</div>
+            <div class="s-val" id="emDistMin" onclick="tapEdit(this,'distMin','modal')">30</div>
             <div class="s-btn" onclick="adjModal('distMin',5)">+</div>
           </div>
         </div>
@@ -336,7 +376,7 @@ canvas{width:100%!important;height:100%!important;display:block}
           <div class="em-label">Max</div>
           <div class="em-num-row">
             <div class="s-btn" onclick="adjModal('distMax',-5)">−</div>
-            <div class="s-val" id="emDistMax">120</div>
+            <div class="s-val" id="emDistMax" onclick="tapEdit(this,'distMax','modal')">120</div>
             <div class="s-btn" onclick="adjModal('distMax',5)">+</div>
           </div>
         </div>
@@ -347,7 +387,7 @@ canvas{width:100%!important;height:100%!important;display:block}
       <div class="em-label">Repos après cet exercice (sec)</div>
       <div class="em-num-row">
         <div class="s-btn" onclick="adjModal('restAfter',-5)">−</div>
-        <div class="s-val" id="emRest">60</div>
+        <div class="s-val" id="emRest" onclick="tapEdit(this,'restAfter','modal')">60</div>
         <div class="s-btn" onclick="adjModal('restAfter',5)">+</div>
       </div>
     </div>
@@ -355,6 +395,18 @@ canvas{width:100%!important;height:100%!important;display:block}
     <div class="em-footer">
       <button class="em-btn" onclick="cancelModal()">Annuler</button>
       <button class="em-btn save" onclick="saveModal()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Slot name modal -->
+<div class="slot-name-modal hidden" id="slotNameModal">
+  <div class="slot-name-box">
+    <h3>Nom du programme</h3>
+    <input class="slot-name-input" id="slotNameInput" type="text" placeholder="Ex: Push-ups débutant" maxlength="25">
+    <div class="slot-name-btns">
+      <button class="cancel" onclick="cancelSlotName()">Annuler</button>
+      <button class="confirm" onclick="confirmSlotName()">Sauver</button>
     </div>
   </div>
 </div>
@@ -389,16 +441,148 @@ let program={sets:3,seriesRest:90,exercises:[
 ]};
 let nextId=2;
 
-function saveProg(){try{localStorage.setItem('repos_prog',JSON.stringify(program));}catch(e){}}
+let loadedProgName='';
+
+function saveProg(){try{localStorage.setItem('repos_prog',JSON.stringify(program));localStorage.setItem('repos_prog_name',loadedProgName);}catch(e){}}
 function loadProg(){
-  try{const s=localStorage.getItem('repos_prog');if(s){program=JSON.parse(s);nextId=program.exercises.reduce((m,e)=>Math.max(m,e.id+1),1);}}catch(e){}
+  try{const s=localStorage.getItem('repos_prog');if(s){program=JSON.parse(s);nextId=program.exercises.reduce((m,e)=>Math.max(m,e.id+1),1);}
+  const n=localStorage.getItem('repos_prog_name');if(n)loadedProgName=n;}catch(e){}
+}
+function updProgNameLine(){$('progNameLine').textContent=loadedProgName?'\u{1F4CB} '+loadedProgName:'';}
+
+// ===== SAVE SLOTS (7 max) =====
+const MAX_SLOTS=7;
+function getSlots(){try{const s=localStorage.getItem('repos_slots');return s?JSON.parse(s):[];}catch(e){return[];}}
+function setSlots(slots){try{localStorage.setItem('repos_slots',JSON.stringify(slots));}catch(e){}}
+
+let pendingSlotIdx=-1;
+
+function renderSlots(){
+  const slots=getSlots();
+  const el=$('saveSlots');el.innerHTML='';
+  for(let i=0;i<MAX_SLOTS;i++){
+    const slot=slots[i]||null;
+    const div=document.createElement('div');
+    div.className='save-slot'+(slot?' active':'');
+    if(slot){
+      const exCount=slot.data.exercises?slot.data.exercises.length:0;
+      const sets=slot.data.sets||0;
+      div.innerHTML=`<div class="save-slot-num">${i+1}</div>
+        <div class="save-slot-info">
+          <div class="save-slot-name">${slot.name}</div>
+          <div class="save-slot-meta">${exCount} exo${exCount>1?'s':''} · ${sets||'∞'} séries</div>
+        </div>
+        <div class="save-slot-actions">
+          <div class="slot-btn load" onclick="loadSlot(${i})" title="Charger">↓</div>
+          <div class="slot-btn save-act" onclick="saveToSlot(${i})" title="Écraser">↑</div>
+          <div class="slot-btn del" onclick="deleteSlot(${i})" title="Supprimer">✕</div>
+        </div>`;
+    }else{
+      div.innerHTML=`<div class="save-slot-num">${i+1}</div>
+        <div class="save-slot-info"><div class="save-slot-empty">— vide —</div></div>
+        <div class="save-slot-actions">
+          <div class="slot-btn save-act" onclick="saveToSlot(${i})" title="Sauvegarder ici">↑</div>
+        </div>`;
+    }
+    el.appendChild(div);
+  }
+}
+
+function saveToSlot(i){
+  pendingSlotIdx=i;
+  const slots=getSlots();
+  $('slotNameInput').value=slots[i]?slots[i].name:'';
+  $('slotNameModal').classList.remove('hidden');
+  setTimeout(()=>$('slotNameInput').focus(),100);
+}
+
+function cancelSlotName(){$('slotNameModal').classList.add('hidden');pendingSlotIdx=-1;}
+
+function confirmSlotName(){
+  const name=$('slotNameInput').value.trim()||'Programme '+(pendingSlotIdx+1);
+  const slots=getSlots();
+  while(slots.length<=pendingSlotIdx) slots.push(null);
+  slots[pendingSlotIdx]={name:name,data:JSON.parse(JSON.stringify(program))};
+  setSlots(slots);
+  $('slotNameModal').classList.add('hidden');
+  pendingSlotIdx=-1;
+  renderSlots();
+}
+
+function loadSlot(i){
+  const slots=getSlots();
+  if(!slots[i])return;
+  program=JSON.parse(JSON.stringify(slots[i].data));
+  loadedProgName=slots[i].name;
+  nextId=program.exercises.reduce((m,e)=>Math.max(m,e.id+1),1);
+  saveProg();
+  renderProgPanel();renderSlots();updProgNameLine();
+}
+
+function deleteSlot(i){
+  const slots=getSlots();
+  if(!slots[i])return;
+  slots[i]=null;
+  // Trim trailing nulls
+  while(slots.length>0&&slots[slots.length-1]===null) slots.pop();
+  setSlots(slots);
+  renderSlots();
+}
+
+// ===== TAP TO EDIT (numeric keyboard) =====
+function tapEdit(el,key,ctx){
+  const curVal=el.textContent;
+  if(curVal==='∞') return; // can't edit infinite
+  const input=document.createElement('input');
+  input.type='number';
+  input.inputMode='numeric';
+  input.pattern='[0-9]*';
+  input.className='s-val-input';
+  input.value=curVal;
+  input.style.width=Math.max(50,el.offsetWidth+10)+'px';
+  el.replaceWith(input);
+  input.focus();
+  input.select();
+
+  const commit=()=>{
+    let v=parseInt(input.value)||0;
+    if(ctx==='prog'){
+      if(key==='sets') v=Math.max(0,v);
+      if(key==='seriesRest') v=Math.max(0,v);
+      program[key]=v;
+      saveProg();
+    }else if(ctx==='modal'){
+      if(key==='reps') v=Math.max(1,v);
+      if(key==='duration') v=Math.max(5,v);
+      if(key==='distMin'){v=Math.max(0,v);if(v>=mData.distMax-5)v=Math.max(0,mData.distMax-5);}
+      if(key==='distMax'){v=Math.max(10,Math.min(MAXD,v));if(v<=mData.distMin+5)v=mData.distMin+5;}
+      if(key==='restAfter') v=Math.max(0,v);
+      mData[key]=v;
+    }
+    const newEl=document.createElement('div');
+    newEl.className='s-val';
+    newEl.id=el.id;
+    newEl.onclick=()=>tapEdit(newEl,key,ctx);
+    if(ctx==='prog'){
+      newEl.textContent=(key==='sets'&&v===0)?'∞':v;
+      if(key==='sets') $('pSets')&&null; // id restored via newEl.id
+    }else{
+      newEl.textContent=v;
+    }
+    input.replaceWith(newEl);
+    if(ctx==='modal') syncModalVals();
+    if(ctx==='prog') renderProgPanel();
+  };
+
+  input.addEventListener('blur',commit);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.blur();}});
 }
 
 // ===== WORKOUT STATE =====
 let appState='idle';
 let curSeries=1,curExIdx=0,curCount=0,totalAll=0;
 let firstRepTime=null,inZone=false,lastRepTime=0,exDone=false;
-let durTimer=null,durationRem=0;
+let durTimer=null,durationRem=0,durInZone=false;
 let restTimerId=null,restRem=0,restCb=null;
 let allDown=[],allUp=[],curDown=[],curUp=[];
 let prevD=null,prevT=null;
@@ -421,6 +605,7 @@ function getCurEx(){return program.exercises[curExIdx]||null;}
 function openProgram(){
   if(appState!=='idle')return;
   renderProgPanel();
+  renderSlots();
   $('progPanel').classList.remove('hidden');
 }
 function closeProgram(){$('progPanel').classList.add('hidden');}
@@ -540,10 +725,14 @@ function startCurEx(){
   setStatus(`${ex.name}${serTxt}`,'active');
   $('goBtn2').disabled=true;$('goBtn2').textContent='En cours...';
   if(ex.type==='duration'){
-    durationRem=ex.duration;updCountDisplay();
+    durationRem=ex.duration;durInZone=false;updCountDisplay();
     durTimer=setInterval(()=>{
-      durationRem--;updCountDisplay();
-      if(durationRem<=0){clearInterval(durTimer);durTimer=null;onExDone();}
+      if(durInZone){
+        durationRem--;updCountDisplay();
+        if(durationRem<=0){clearInterval(durTimer);durTimer=null;onExDone();}
+      }else{
+        updCountDisplay();
+      }
     },1000);
   }
 }
@@ -662,6 +851,11 @@ function onProf(e){
     $('liveDist').textContent=d+' mm';
     updZoneBar(d);
     checkRep(d,t);
+    // Track zone for duration exercises
+    const ex=getCurEx();
+    if(ex&&ex.type==='duration'&&appState==='running'){
+      durInZone=(d>=ex.distMin&&d<=ex.distMax);
+    }
     if(prevD!==null&&prevT!==null){
       const dt=(t-prevT)/1000;
       if(dt>0){const dd=d-prevD,sp=Math.abs(dd/dt);if(sp>5){if(dd<0)curDown.push(sp);else curUp.push(sp);}}
@@ -690,11 +884,11 @@ function updCountDisplay(){
     $('progressRight').textContent=curCount+'/'+ex.reps;
   } else {
     $('count').textContent=durationRem;
-    $('countLabel').textContent='sec';
+    $('countLabel').textContent=durInZone?'sec \u25CF EN ZONE':'sec \u25CB HORS ZONE';
     $('goalDisplay').innerHTML='/ <span>'+ex.duration+'</span>';
     const pct=Math.max(0,(1-durationRem/ex.duration)*100);
     $('progressFill').style.width=pct+'%';$('progressFill').classList.toggle('done',pct>=100);
-    $('progressLeft').textContent=durationRem+'s restantes';
+    $('progressLeft').textContent=durationRem+'s restantes'+(durInZone?'':' (pause)');
     $('progressRight').textContent=Math.round(pct)+'%';
   }
   $('progressWrap').style.display='block';
@@ -820,7 +1014,7 @@ function showOverlay(){if(!bleOk)$('ov').classList.remove('hidden');}
 document.addEventListener('visibilitychange',async()=>{if(document.visibilityState==='visible'){try{if('wakeLock' in navigator)await navigator.wakeLock.request('screen');}catch(e){}}});
 
 // ===== INIT =====
-loadProg();updExDisplay();draw();
+loadProg();updProgNameLine();updExDisplay();draw();
 </script>
 </body>
 </html>
